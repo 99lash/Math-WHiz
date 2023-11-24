@@ -1,11 +1,9 @@
 # Case-study-in-C
-MATH WHIZ
-{
-developed and program by COLMO and MANIT.
-}
+<h1>MATH WHIZ</h1>
+<h4>developed and program by COLMO and MANIT.</h4>
 
-----
-ABOUT
+-----
+<ABOUT>
     This console application challenge users to solve random mathematical questions and different operations (dynamic questions) according to the designated difficulty of current stage and level of the user. 
 
     -It has 6 stages and 5 levels in every stage. 
