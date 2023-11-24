@@ -80,16 +80,16 @@ int main()
         //fscanf(f1, "%s", &account.password);
             if(!strcmp(account.username, iUsername)){
                 if(!strcmp(account.password, iPassword)){
-                printf("A1");
+                printf("A1\n");
                 decision=1;
                 break;
                 }
                 else
-                    printf("A");
+                    printf("A\n");
                 break;
             }
             else{
-                printf("B");
+                printf("B\n");
                 goto dashboard;
             }
         }
