@@ -41,13 +41,16 @@ int main()
     scanf("%i", &select);
     
     switch(select){
+        
         case 1 : //REGISTER
-
         system("CLS");
         retry_loop:
         f1 = fopen("account_details.txt", "a+");
+        if(f1 == NULL) printf("\nFILE NOT FOUND\n");
+        //while(fread(&account.username, sizeof(struct user),1 ,f1)!=EOF){
         printf("\nEnter preferred username:\t");
         scanf("%s", &account.username);
+        //}
         printf("\nEnter preferred password:\t");
         scanf("%s", &account.password);
         printf("\nRe-enter preferred password:\t");
@@ -57,6 +60,7 @@ int main()
             fwrite(&account, sizeof(struct user), 1, f1);
             //fprintf(f1, "%s", &account.username);
             //fprintf(f1, "%s\n", &account.password);
+
         }
         else{
             system("CLS");
@@ -68,13 +72,13 @@ int main()
         break;
 
         case 2: //LOG IN
-
         system("CLS");
         printf("Username:\t");
         scanf("%s", &iUsername);
         printf("Password:\t");
         scanf("%s", &iPassword);
-        f1 = fopen("account_details.txt", "a+");
+        f1 = fopen("account_details.txt", "rb");
+        if(f1 == NULL) printf("\nFILE NOT FOUND\n");
         while(fread(&account, sizeof(struct user),1, f1)!=EOF){
         //while(fscanf(f1, "%s", &account.username)!=EOF){
         //fscanf(f1, "%s", &account.password);
@@ -125,5 +129,6 @@ int main()
         goto dashboard;
     }
     }while(select!=4);
+    system("CLS");
 return 0;
 }
