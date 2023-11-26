@@ -1,4 +1,9 @@
 *.out
+<<<<<<< HEAD
 Test
 Assets/account_details.txt
 Backup
+=======
+Trial
+Assets/account_details.txt
+>>>>>>> dd1efcb1b5768c550b2b0481cff9970e0eba9e28
