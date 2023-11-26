@@ -14,6 +14,8 @@ struct user_progress{
     int level;
 };
 
+int MATHWHIZ(int select);
+
 void title()
 {
 printf("Math Whiz");
@@ -23,7 +25,7 @@ printf("\n\n\n\n\n");
 int main()
 {
 
-    int select, decision=0;
+    int select, auth=0;
     char confirm_password[12], iUsername[20], iPassword[12];
     FILE *f1;
     struct user account;
@@ -85,7 +87,7 @@ int main()
             if(!strcmp(account.username, iUsername)){
                 if(!strcmp(account.password, iPassword)){
                 printf("A1\n");
-                decision=1;
+                auth=1;
                 break;
                 }
                 else
@@ -96,16 +98,33 @@ int main()
                 printf("B\n");
                 goto dashboard;
             }
-        }
-        if(decision != 0){
+        }break;
+        case 3: //ABOUT MATH WHIZ
+        system("CLS");
+        printf("MATH WHIZ ABOUT");
+        printf("\n\n\n\n\n\n");
+        printf("PRESS ANY KEY TO GO BACK");
+        getch();
+        system("CLS");
+        goto dashboard;
+        break;
+
+        case 4: //EXIT OPTION
+        printf("\nTHANKS FOR PLAYING\n");
+        getch();
+        break;
+    }
+    }while(select!=4);
+    if(auth == 1){
+        fclose(f1);
         printf("\nLOGIN SUCCESSFUL\nClick any key to continue");
         getch();
-        decision = 0;
+        auth = 0;
         select = 5;
-        fclose(f1);
         system("CLS");
+        MATHWHIZ(select);
         }
-        else if(decision == 0){
+        else if(auth == 0){
         printf("\nINVALID CREDENTIALS\nClick any key to continue");
         fclose(f1);
         getch();
@@ -117,18 +136,13 @@ int main()
         getch();
         system("CLS");
         }
-        break;
-
-        case 3: //ABOUT MATH WHIZ
-        system("CLS");
-        printf("MATH WHIZ ABOUT");
-        printf("\n\n\n\n\n\n");
-        printf("PRESS ANY KEY TO GO BACK");
-        getch();
-        system("CLS");
-        goto dashboard;
-    }
-    }while(select!=4);
-    system("CLS");
+    
 return 0;
+}
+//LINK DASHBOARD TO MENU
+//LINK MENU TO MAIN[MATH WHIZ]
+//LINK MENU TO LEADERBOARDS
+int MATHWHIZ(int select)
+{
+    title();
 }
