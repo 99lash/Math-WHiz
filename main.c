@@ -3,7 +3,8 @@
 #include <conio.h>
 #include <string.h>
 #include <time.h>
-/*
+/* 
+--------------GUIDELINE AND OUTLINE OF PROGRAM-------------
 --DASHBOARD{
     [1] LOGIN PAGE
     [2] SIGN UP PAGE
@@ -30,6 +31,7 @@
 
     [X] EXIT OPTION
 }
+-----------------------------------------------------------
 */
 
 struct user
@@ -37,16 +39,6 @@ struct user
     char username[20];
     char password[12];
 };
-
-/*int dashboard(int option_select)
-{
-    printf("[1] LOG IN\n");
-    printf("[2] SIGN UP\n");
-    printf("[3] EXIT\n\n\n");
-    printf("SELECT:\t");
-    scanf("%i", &option_select);
-}
-*/
 
 //SIGNUP FUNCTION//
 int signup(int isRegistered)
@@ -85,6 +77,7 @@ int signup(int isRegistered)
 return isRegistered = 1;
 }//END OF SIGNUP FUNCTION//
 
+//LOGIN FUNCTION//
 void login()
 {
     char username_checker[20], password_checker[12];
@@ -100,7 +93,7 @@ void login()
     details_checker = fopen("account_details.txt", "r");
     if(details_checker == NULL) 
     printf("ERROR_FILE_NOT_FOUND_3");
-    else{
+    else{//GANON PARIN PROBLEMA SA ACCOUNT: AUTHENTICATION ISSUE OF USERNAME AND PASSWORD IDENTIFIER SA FILE. 
         while(fread(&account.username, sizeof(struct user),1 ,details_checker)!=EOF){
             if(!strcmp(account.username, username_checker)){
                 if(!strcmp(account.password, password_checker)){
@@ -121,6 +114,7 @@ void login()
         }
     }
 }
+//END OF LOGIN FUNCTION//
 
 int main()
 {   
@@ -139,10 +133,10 @@ int main()
     scanf("%i", &option_select);
     //END OF DASHBOARD PAGE//
     switch(option_select){
-        case 1 : //LOG IN PAGE
+        case 1 : //LOG IN PAGE//
         system("cls");
         login();
-        break;
+        break;//END LOG IN PAGE//
         
         case 2 : //SIGN UP PAGE//
         system("cls");
