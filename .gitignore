@@ -1,4 +1,4 @@
 *.out
-*fileTest.c
-*fileTest.exe
-*.txt
+Test
+Assets/account_details.txt
+Backup
