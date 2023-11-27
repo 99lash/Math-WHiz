@@ -1,9 +1,4 @@
-*.out
-<<<<<<<<< Temporary merge branch 1
-Trial
-Assets/account_details.txt
-=========
 Test
 Assets/account_details.txt
 Backup
->>>>>>>>> Temporary merge branch 2
+a.out
