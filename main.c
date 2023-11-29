@@ -64,7 +64,7 @@ int signup(int isRegistered)
 
     details_handler = fopen(strcat(file_name,".txt"),"w+");
     if(details_handler == NULL) printf("ERROR_FILE_NOT_FOUND_3");
-    if(!strcmp(account.username, username_checker)){
+    if(!strcmp(&account.username, username_checker)){
         printf("\nUSERNAME HAVE ALREADY EXIST!\n");
         fclose(details_handler);
         getch();
@@ -112,7 +112,7 @@ int login(int isLogin)
     scanf("%s", password_checker);
     strcpy(file_name,username_checker);
     details_handler = fopen(strcat(file_name,".txt"), "r");
-    if(details_handler == NULL) printf("\nACCOUNT DOES NOT EXIST\n");
+    if(details_handler == NULL) printf("\nACCOUNT DOES NOT EXIST\n"); //find the file name
     else{
         while(fread(&account, sizeof(struct user),1, details_handler)!=EOF){
             if(!strcmp(account.password, password_checker)){
