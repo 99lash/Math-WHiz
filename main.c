@@ -120,6 +120,7 @@ int login(int isLogin)
             break;
             }
             else{
+            printf("\nINCORRECT PASSWORD");
             isLogin=0;
             break;
             }
@@ -190,7 +191,6 @@ int main()
         system("cls");
         auth = login(auth);
         if(auth==0){
-            printf("Press any key to continue");
             getch();
             system("cls");
             goto dashboard;
