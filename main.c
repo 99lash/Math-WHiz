@@ -130,38 +130,7 @@ return isLogin;
 }
 //END OF LOGIN FUNCTION//
 
-int menu(char menu_option)
-{
-    tryagain:
-    printf("MATH WHIZ");
-    printf("\n\n\n");
-    printf("[G] START\n");
-    printf("[L] LEADERBOARDS\n");
-    printf("[A] ABOUT\n");
-    printf("[X] EXIT\n");
-    menu_option = getch();
-    menu_option = toupper(menu_option);
-    switch(menu_option){
-        
-        case 71 : printf("G: THIS IS MATH WHIZ PAGE");
-        break;
-        
-        case 76 : printf("L: THIS IS LEADERBOARDS PAGE");
-        break;
-        
-        case 65 : printf("A: THIS IS ABOUT PAGE");
-        about(menu_option);
-        break;
-        
-        case 88 : printf("X: THIS EXIT BUTTON");
-        break;
-        
-        default : system("cls"); goto tryagain;
-    }
-return menu_option;
-}
-
-int about(char  about_option)
+int about(char about_option)
 {   
     printf("MATH WHIZ ABOUT");
     printf("\n\n\n\n\n\n");
@@ -173,49 +142,91 @@ int about(char  about_option)
     }
 }
 
+
+int menu(char menu_option)
+{
+    tryagain:
+    printf("MATH WHIZ");
+    printf("\n\n\n");
+    printf("[G] START\n[L] LEADERBOARDS\n[A] ABOUT PAGE\n[X] EXIT");
+    menu_option = getch();
+    menu_option = toupper(menu_option);
+    switch(menu_option){
+        case 71 : printf("THIS IS MATH WHIZ PAGE");
+        break;
+                
+        case 76 : printf("L: THIS IS LEADERBOARDS PAGE");
+        break;
+                
+        case 65 : printf("A: THIS IS ABOUT PAGE");
+        break;
+                
+        case 88 : printf("X: THIS EXIT BUTTON");
+        break;
+        
+        default : system("cls"); 
+        goto tryagain;
+    }
+return menu_option;
+}
+
+
+
 int main()
 {   
-    int dashboard_select, isRegistered = 0, auth = 0;
-    char confirm_passsword[12], menu_option;
+    int isRegistered = 0, auth = 0;
+    char dashboard_select, confirm_passsword[12], menu_option;
     struct user account;
 
     //FILE *details_handler;
     //DASHBOARD PAGE//
     dashboard:
     printf("MATH WHIZ\n\n\n");
-    printf("[1] LOG IN\n");
-    printf("[2] SIGN UP\n");
-    printf("[3] EXIT\n\n\n");
-    printf("SELECT:\t");
-    scanf("%i", &dashboard_select);
+    printf("[1] LOG IN\n[2] SIGN UP\n[3] EXIT\n\n\n");
+    printf("PRESS THE CORRESPONDING KEY TO SELECT");
+    dashboard_select = getch();
     //END OF DASHBOARD PAGE//
-    switch(dashboard_select){
-        case 1 : //LOG IN PAGE FUNCTION//
+    if(dashboard_select == 49){//LOG IN PAGE FUNCTION//
         system("cls");
         auth = login(auth);
-         if(auth==0){
-        printf("Press any key to continue");
-        getch();
-        system("cls");
-        goto dashboard;
+        if(auth==0){
+            printf("Press any key to continue");
+            getch();
+            system("cls");
+            goto dashboard;
         }
         else if(auth == 1){
-        system("cls");
-        menu(menu_option);
+            system("cls");
+            menu_option = menu(menu_option);//MENU PAGE FUNCTION//
+            
         }
-        break;//END LOG IN PAGE FUNCTION//
-        
-        case 2 : //SIGN UP PAGE FUNCTION//
+    }//END LOG IN PAGE FUNCTION//
+    else if(dashboard_select == 50){
+        //SIGN UP PAGE FUNCTION//
         system("cls");
         isRegistered = signup(isRegistered);
         if(isRegistered==1){
         system("cls");
         goto dashboard;
         }
-        break;//END OF SIGN UP PAGE FUNCTION//
-
-        case 3 : //EXIT CODE
+        //END OF SIGN UP PAGE FUNCTION//
+    }
+    else if(dashboard_select == 51){
+        //EXIT CODE
         return 1;
     }
+    else{
+        printf("\nINVALID KEY SELECTION\n");
+        getch();
+        system("cls");
+        goto dashboard;
+    }
 return 0;
+}
+
+void dashboard()
+{
+    printf("MATH WHIZ");
+    printf("\n\n\n");
+    printf("[1]\nLOG IN[2]\nSIGN UP[3]EXIT");
 }
