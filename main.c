@@ -39,13 +39,15 @@ struct user
 {
     char username[20];
     char password[12];
-    char progress[12];
+    struct progress{
+        int stage, level;
+    }mode[2];
 };
 
 //SIGNUP FUNCTION//
 int signup(int isRegistered)
 {   
-    char option, username_checker[20], confirm_password[12], file_name[FILENAME_MAX];
+    char option, username_checker[20], confirm_password[12], file_name[20];
     struct user account;
     FILE *details_handler;
     isRegistered = 0;
@@ -60,11 +62,10 @@ int signup(int isRegistered)
     scanf("%s", &account.password);
     printf("Confirm your passsword:\t");
     scanf("%s", &confirm_password);
-    strcpy(file_name, username_checker); 
-
-    details_handler = fopen(strcat(file_name,".txt"),"w+");
+    strcpy(file_name, username_checker);
+    details_handler = fopen(strcat(file_name,".txt"),"w");
     if(details_handler == NULL) printf("ERROR_FILE_NOT_FOUND_3");
-    if(!strcmp(&account.username, username_checker)){
+    if(!strcmp(account.username, username_checker)){
         printf("\nUSERNAME HAVE ALREADY EXIST!\n");
         fclose(details_handler);
         getch();
@@ -75,23 +76,28 @@ int signup(int isRegistered)
         if(!strcmp(account.password, confirm_password)){
             fwrite(&account, sizeof(struct user),1,details_handler);
             fclose(details_handler);
-            isRegistered=1;
             printf("\nAccount has been created successfully\nPress any key to continue");
             getch();
+            return isRegistered=1;
         }
         else{
-            printf("\nPASSWORD DOES NOT MATCH\n\nPress Y to try again\nPress B to go back to dashboard");
+            A:
+            printf("\nPASSWORD DOES NOT MATCH\n\n\nPRESS [Y] TO TRY AGAIN \nPRESS [N] TO GO BACK TO DASHBOARD");
             option = getch();
-            if(option == 121 || option == 89 ){
+            option = toupper(option);
+            if(option == 89){ // ASCII CODE OF [Y] == 89
+                system("cls");
                 goto tryagain;
             }
-            else if(option == 98 || option == 66){
-                return isRegistered = 0;
+            else if(option == 78){ // ASCII CODE OF [N] == 66
+                return isRegistered-1;
+            }
+            else{
+                system("cls");
+                goto A;
             }
         }
     }
-
-return isRegistered;
 }//END OF SIGNUP FUNCTION//
 
 //LOGIN FUNCTION//
@@ -99,7 +105,6 @@ int login(int isLogin)
 {
     
     isLogin=0;
-    int isUsername_exist, isPassword_exist;
     char username_checker[20], password_checker[12], file_name[FILENAME_MAX];
     struct user account;
     FILE *details_handler;
@@ -112,7 +117,13 @@ int login(int isLogin)
     scanf("%s", password_checker);
     strcpy(file_name,username_checker);
     details_handler = fopen(strcat(file_name,".txt"), "r");
-    if(details_handler == NULL) printf("\nACCOUNT DOES NOT EXIST\n"); //find the file name
+    if(details_handler == NULL) { //find the account name using file_name
+        printf("\nACCOUNT DOES NOT EXIST\n");
+        fclose(details_handler);
+        getch();
+        system("cls");
+        return isLogin = 0;
+    } 
     else{
         while(fread(&account, sizeof(struct user),1, details_handler)!=EOF){
             if(!strcmp(account.password, password_checker)){
@@ -122,6 +133,8 @@ int login(int isLogin)
             else{
             printf("\nINCORRECT PASSWORD");
             isLogin=0;
+            getch();
+            system("cls");
             break;
             }
         }
@@ -131,52 +144,28 @@ return isLogin;
 }
 //END OF LOGIN FUNCTION//
 
-int about(char about_option)
-{   
-    printf("MATH WHIZ ABOUT");
-    printf("\n\n\n\n\n\n");
-    printf("Press [B] to go back to menu");
-    about_option = getch();
-    about_option = toupper( about_option);
-    if(about_option == 66){
-    return  about_option;
+//MENU FUNCTION//
+
+    
+//END OF MENU FUNCTION
+/*
+//ABOUT FUNCTION
+char about(char about_option){
+    if(about_option != 66){ //ASCII CODE OF [B] == 66
+        system("cls");
+        printf("THIS IS ABOUT MATH WHIZ\n\n\n");
+        printf("PRESS [B] TO GO BACK TO MENU\n");
+        about_option = getch();
+        about_option = toupper(about_option);
     }
-}
-
-
-int menu(char menu_option)
-{
-    tryagain:
-    printf("MATH WHIZ");
-    printf("\n\n\n");
-    printf("[G] START\n[L] LEADERBOARDS\n[A] ABOUT PAGE\n[X] EXIT");
-    menu_option = getch();
-    menu_option = toupper(menu_option);
-    switch(menu_option){
-        case 71 : printf("THIS IS MATH WHIZ PAGE");
-        break;
-                
-        case 76 : printf("L: THIS IS LEADERBOARDS PAGE");
-        break;
-                
-        case 65 : printf("A: THIS IS ABOUT PAGE");
-        break;
-                
-        case 88 : printf("X: THIS EXIT BUTTON");
-        break;
-        
-        default : system("cls"); 
-        goto tryagain;
-    }
-return menu_option;
-}
-
-
+    else return about_option;
+}//END OF ABOUT FUNCTION//
+*/
 
 int main()
 {   
     int isRegistered = 0, auth = 0;
-    char dashboard_select, confirm_passsword[12], menu_option;
+    char dashboard_option, confirm_passsword[12], menu_option, about_option;
     struct user account;
 
     //FILE *details_handler;
@@ -185,33 +174,81 @@ int main()
     printf("MATH WHIZ\n\n\n");
     printf("[1] LOG IN\n[2] SIGN UP\n[3] EXIT\n\n\n");
     printf("PRESS THE CORRESPONDING KEY TO SELECT");
-    dashboard_select = getch();
+    dashboard_option = getch();
     //END OF DASHBOARD PAGE//
-    if(dashboard_select == 49){//LOG IN PAGE FUNCTION//
+    if(dashboard_option == 49){//LOG IN PAGE FUNCTION // ASCII CODE OF [1] == 49
         system("cls");
         auth = login(auth);
         if(auth==0){
-            getch();
+            goto dashboard;
+        }
+        else if(auth == 1){ 
+            system("cls"); //MENU PAGE//
+            while(menu_option != 71 && menu_option != 76 && menu_option != 65 && menu_option != 88){ // di ko maexplain and imagine kung bakit gumagana && instead of ||. BAKA PAGOD NA UTAK
+                system("cls"); 
+                printf("MATH WHIZ");
+                printf("\n\n\n");
+                printf("[G] START\n[L] LEADERBOARDS\n[A] ABOUT PAGE\n[X] EXIT");
+                menu_option = getch();
+                menu_option = toupper(menu_option);
+                //END OF MENU PAGE //
+
+                switch(menu_option){
+                    case 71 : //MATH WHIZ GAME//
+                        do{ //ASCII CODE OF [B] == 66
+                            system("cls");
+                            printf("MATH WHIZ GAME\n\n\n");
+                            printf("PRESS [B] TO GO BACK TO MENU\n");
+                            about_option = getch();
+                            about_option = toupper(about_option);
+                            if(about_option == 66) break;
+                        }while(about_option != 66);
+                        menu_option = 00; break;
+                        //MATH WHIZ PAGE//
+                    
+                    case 76 : //LEADERBOARDS PAGE//
+                        do{ //ASCII CODE OF [B] == 66
+                            system("cls");
+                            printf("LEADERBOARDS\n\n\n");
+                            printf("PRESS [B] TO GO BACK TO MENU\n");
+                            about_option = getch();
+                            about_option = toupper(about_option);
+                            if(about_option == 66) break;
+                        }while(about_option != 66);
+                        menu_option = 00; break;
+                        //END OF LEADERBOARDS PAGE//
+
+                    case 65 : //ABOUT PAGE//
+                        do{ //ASCII CODE OF [B] == 66
+                            system("cls");
+                            printf("THIS IS ABOUT MATH WHIZ\n\n\n");
+                            printf("PRESS [B] TO GO BACK TO MENU\n");
+                            about_option = getch();
+                            about_option = toupper(about_option);
+                            if(about_option == 66) break;
+                        }while(about_option != 66);
+                        menu_option = 00; break;
+                        //END OF ABOUT PAGE//
+
+                    case 88 : exit(0);
+                }
+            }   
+        }
+    }//END LOG IN PAGE FUNCTION//
+    else if(dashboard_option == 50){ // // ASCII CODE OF [2] == 50
+        //SIGN UP PAGE FUNCTION//
+        system("cls");
+        isRegistered = signup(auth);
+        if(isRegistered==1){
             system("cls");
             goto dashboard;
         }
-        else if(auth == 1){
+        else if(isRegistered==-1){
             system("cls");
-            menu_option = menu(menu_option);//MENU PAGE FUNCTION//
-            
-        }
-    }//END LOG IN PAGE FUNCTION//
-    else if(dashboard_select == 50){
-        //SIGN UP PAGE FUNCTION//
-        system("cls");
-        isRegistered = signup(isRegistered);
-        if(isRegistered==1){
-        system("cls");
-        goto dashboard;
-        }
-        //END OF SIGN UP PAGE FUNCTION//
+            goto dashboard;
+        }//END OF SIGN UP PAGE FUNCTION//
     }
-    else if(dashboard_select == 51){
+    else if(dashboard_option == 51){ // ASCII CODE OF [3] == 51
         //EXIT CODE
         return 1;
     }
@@ -222,11 +259,4 @@ int main()
         goto dashboard;
     }
 return 0;
-}
-
-void dashboard()
-{
-    printf("MATH WHIZ");
-    printf("\n\n\n");
-    printf("[1]\nLOG IN[2]\nSIGN UP[3]EXIT");
 }
