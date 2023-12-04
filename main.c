@@ -177,6 +177,9 @@ void menu(){
             about();
             break;
 
+            case 27 : //ascii code of [ESC] is 27
+            system("cls"); exit(0);
+
             default: system("cls");
         } //ascii code of [ESC] is 27
     }while(option!='S' && option!='L' && option!='P' && option!= 27); 
@@ -284,37 +287,74 @@ Press ESC to log out and exit
 */
 
 //UNDER CONSTRUCTION PA ITO MUNA SA NGAYON, PINAPATULOG NA NI INA
-//TIME CHECK 1:44 AM, DEC 3, 2023
+//TIME CHECK 2:33 AM, DEC 3, 2023
 
 void stage1(){
+    char option;
     int n1, n2, sys_ans, user_ans, level=1;
     srand(time(NULL));
+    
+    while(option != 27 && option != 'B'){
     printf("STAGE 1\n\n\n");
-    do{
-        if(level == 1){
+        do{
+        if(level <= 2){
         n1 = (rand() % 25) + 1;
         n2 = (rand() % 25) + 1;
-        printf("LEVEL %i\n",level);
+        printf("\n\nLEVEL %i\n",level);
         sys_ans = addition(n1,n2);
         printf("%i + %i = ", n1, n2);
         scanf("%i", &user_ans);
         identifier(user_ans, sys_ans);
-        printf("\nWRONG : %i\n\n", counter);
-        getch();
-        level++;    
+        level++;
         }
-        else if(level == 2){
-        n1 = (rand() % 50) + 1;
-        n2 = (rand() % 50) + 1;
-        printf("LEVEL %i\n",level);
-        sys_ans = addition(n1,n2);
-        printf("%i + %i = ", n1, n2);
+        else if(level >= 3){
+        n1 = (rand() % 25) + 1;
+        n2 = (rand() % 25) + 1;
+        printf("\n\nLEVEL %i\n",level);
+        sys_ans = subtraction(n1,n2);
+        printf("%i - %i = ", n1, n2);
         scanf("%i", &user_ans);
         identifier(user_ans, sys_ans);
-        printf("\nWRONG : %i\n\n", counter);
-        getch();
-        level++;   
+        level++;
         }
-    }while(level<=5);
-    
+        //if(level > 5) break; AUTO BREAK NA YUNG WHILE LOOP KAPAG LUMAGPAS SA LEVEL 5
+        }while(level<=5);
+    printf("\n\nYOU HAVE %i WRONG ANSWERS", counter);
+    if(counter > 0){
+    printf("\n\nPress any key to continue to the try again.");
+    printf("\n\nPress [B] to go back to dashboard.");
+    printf("\nPress ESC to log out and exit.");
+    option = getch();
+    option = toupper(option);
+        if(option == 27){//ascii code of [ESC] is 27
+        exit(0);
+        }   
+        else if(option == 'B'){
+        option = 00; level = 1; counter = 0; system("cls");            
+        menu(); break;
+        }
+        else{
+        option = 00; level = 1; counter = 0; system("cls"); 
+        continue;
+        }
+    }
+    else{
+    printf("\n\nPress any key to continue to the next stage.");
+    printf("\n\nPress [B] to go back to dashboard.");
+    printf("\nPress ESC to log out and exit.");
+    option = getch();
+    option = toupper(option);
+        if(option == 27){//ascii code of [ESC] is 27
+        exit(0); break;
+        }
+        else if(option == 'B'){
+        option = 00; level = 1; counter = 0; system("cls");            
+        menu(); break;
+        }
+        else{
+        option = 00; level = 1; counter = 0;
+        printf("\nSTAGE 2 na par call nalang function"); break;
+        }
+    }
+    }
 }
