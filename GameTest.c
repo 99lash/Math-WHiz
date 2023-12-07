@@ -37,8 +37,8 @@ void decision_prompt(){
       case 27 ://ascii code of [ESC] is 27
       exit(0);
 
-      case 'B' : //Press B to go back to dashboard
-      printf("\nDASHBOARD"); break;
+      case 'B' : //Press B to go back to MENU
+      printf("\nMENU"); break;
 
       default : //press any key to try again
       main_option = 00; level = 1; counter = 0;

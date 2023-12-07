@@ -5,7 +5,13 @@
 #include <ctype.h>
 #include <time.h>
 
-int counter=0;
+enum stages{
+    stage_1 = 1,
+    stage_2 = 2
+    };
+
+int counter=0, level=1;
+char main_option, check_filename[20];
 
 struct user{
     char username[20], password[12];
@@ -21,13 +27,13 @@ void leaderboards();
 
 //Function of Operators
 int addition(int n1, int n2) {return n1 + n2;}
-int subtraction(int n1, int n2) { return n1 - n2; }
-int multiplication(int n1, int n2) { return n1 * n2; }
-float division(float n1, float n2) { return n1 / n2; }
+int subtract(int n1, int n2) { return n1 - n2; }
+int multiply(int n1, int n2) { return n1 * n2; }
+float divide(float n1, float n2) { return n1 / n2; }
 //Function of Mixed Operators
-int addandsub(int n1, int n2, int n3) { return n1 + n2 - n3; }
-float mulanddiv(float n1, float n2, float n3) { return n1 * n2 / n3; }
-float allOp(float n1, float n2, float n3, float n4, float n5) {return n1 * n2 / n3 + n4 - n5;}
+int add_sub(int n1, int n2, int n3) { return n1 + n2 - n3; }
+float mult_div(float n1, float n2, float n3) { return n1 * n2 / n3; }
+float all_op(float n1, float n2, float n3, float n4, float n5) {return n1 * n2 / n3 + n4 - n5;}
 
 
 //Correct or Wrong Identifier
@@ -49,6 +55,8 @@ void stage4();
 void stage5();
 void final_stage();
 
+//MAIN OPTION PROMPT
+void option_prompt();
 
 int main(){
     char option;
@@ -68,10 +76,11 @@ int main(){
 return 0;
 }
 //SIGNUP FUNCTION//
+struct user acc; //GLOBAL VARIABLE DECLARATION FOR CONTROL OF STAGES RE-DIRECTION
 void signup(){
-    int tmp=0;
+    // int tmp=0;
     char username_checker[20], password_checker[12], confirm_password[12], file_name[20], option;
-    struct user account;
+    
     FILE *f1;
 
     do{
@@ -83,39 +92,43 @@ void signup(){
         printf("\nRepeat preferred password:\t");
         scanf("%s", password_checker);
         strcpy(file_name, username_checker);
-        if(!strcmp(password_checker, confirm_password)){
-            strcpy(account.password,password_checker);
-            f1 = fopen(strcat(file_name,".dat"),"w+");
-            fwrite(&account,sizeof(struct user),1,f1);
+            if(!strcmp(password_checker, confirm_password)){
+            strcpy(acc.password,confirm_password);
+            strcpy(acc.username,file_name);
+            acc.stage = stage_1;
+            f1 = fopen(strcat(file_name,".dat"),"wb");
+            fprintf(f1,"\n%s\t%i",acc.password,acc.stage); //WRITE TO NG STRING SA FILE HEHE 
+            //fwrite(&account,sizeof(struct user),1,f1);    // PANG WRITE  LANG NG BINARY CANCEL MUNA  
             printf("\nSIGN UP SUCCESS\nPRESS ANY KEY TO CONTINUE");
             fclose(f1);
+            f1 = fopen("leaderboards.txt","a");
+            fprintf(f1, "%s\t%i\n",acc.username,acc.stage);
+            fclose(f1);
             getch();
-            tmp=1;
+            option = 01;
             system("cls");
             login();
-        }
-        else{
-        //ascii code of [ESC] is 27
-        while(option != 27){ 
-            printf("\nPASSWORD DOES NOT MATCH\n\nPress any key to sign up again.\nPress ESC to go back to dashboard\n");
-            option = getch();
-            if(option == 27){ 
-                tmp=1;
-                break;
-            }else{
-                break;
             }
-        system("cls");
-        }
-        }
+            else{
+            //ascii code of [ESC] is 27
+                while(option != 27){ 
+                printf("\nPASSWORD DOES NOT MATCH\n\nPress any key to sign up again.\nPress ESC to go back to dashboard\n");
+                option = getch();
+                if(option == 27){ 
+                option = 01;
+                break;
+                }
+                break;
+                }
+            }
     system("cls");
-    }while(tmp!=1);
+    }while(option!=01);
 main(); 
 }//END OF SIGNUP FUNCTION//
 
 //LOGIN//
 void login(){
-    char username_checker[20], password_checker[12], file_name[20];
+    char username_checker[20], password_checker[12];
     struct user account;
     FILE *f1;
     printf("LOG IN\n\n\n");
@@ -123,8 +136,9 @@ void login(){
     scanf("%s", username_checker);
     printf("\nEnter password:\t");
     scanf("%s", password_checker);
-    strcpy(file_name,username_checker);
-    f1 = fopen(strcat(file_name,".dat"),"r");
+    strcpy(check_filename,username_checker);
+    //printf("%s", check_filename); getch();
+    f1 = fopen(strcat(check_filename,".dat"),"r");
     if(f1 == NULL){
         fclose(f1);
         printf("\nUSER DOES NOT EXIST");
@@ -133,20 +147,21 @@ void login(){
         main();
     }
     else{
-        while(fread(&account, sizeof(struct user),1,f1)!=EOF){
+        while(fscanf(f1,"%s", account.password)!=EOF){
+        //(fread(&account, sizeof(struct user),1,f1)!=EOF){ //PANG READ LANG NG BINARY TO CANCEL MUNA
             if(!strcmp(account.password,password_checker)){
-                fclose(f1);
-                system("cls");
-                menu();
-                break;
+            fclose(f1);
+            system("cls");
+            menu();
+            break;
             }
             else{
-                fclose(f1);
-                printf("\nINCORRECT PASSWORD");
-                getch();
-                system("cls");
-                main();
-                break;
+            fclose(f1);
+            printf("\nINCORRECT PASSWORD");
+            getch();
+            system("cls");
+            main();
+            break;
             }
         }
     }
@@ -154,17 +169,16 @@ void login(){
 
 //MENU FUNCTION//
 void menu(){
-    int tmp=0;
     char option;
 
-    do{
+    while(option!='P' && option!='L' && option!='A' && option!= 27){
         printf("MATH WHIZ\n\n\n");
         printf("[P] START\n[L] LEADERBOARDS\n[A] ABOUT");
-        printf("\n\n\nPress ESC to log out and exit\t");
+        printf("\n\n\nPress ESC to EXIT & LOG OUT\t");
         option = getch();
         option = toupper(option);
         switch(option){
-            case 'P' : //ascii code of [S] is 83//
+            case 'P' : //ascii code of [P] is 80//
             math_whiz();
             break;
 
@@ -182,22 +196,23 @@ void menu(){
 
             default: system("cls");
         } //ascii code of [ESC] is 27
-    }while(option!='S' && option!='L' && option!='P' && option!= 27); 
+    break;
+    }
     
 }//END OF MENU FUNCTION//
 
 void about(){
     char option, buffer[255];
-    FILE *about;
+    FILE *fabt;
     do{
-    about = fopen("about1.txt", "r");
-    if(about == NULL) printf("ERROR_FILE_MISSING");
+    fabt = fopen("about1.txt", "r");
+    if(fabt == NULL) printf("ERROR_FILE_MISSING");
     else{
-        while(fgets(buffer,255,about)!=NULL){
+        while(fgets(buffer,255,fabt)!=NULL){
         printf("%s", buffer);
         }
     }
-    fclose(about);
+    fclose(fabt);
     printf("Press ESC to go back");
     option = getch();
     option = toupper(option);
@@ -233,17 +248,37 @@ void leaderboards(){
 
 //MATH WHIZ//
 void math_whiz(){
+    //int stage_1=1, stage_2=2, stage_3=3, stage_4=4;
+    
+    char ign[20];
     struct user account;
-    account.stage =0;
-    printf("\nMATH WHIZ NA GUYS");
-
-    if(account.stage == 0){
-        system("cls");
-        stage1();
+    FILE *f1;
+     
+    printf("%i\n", acc.stage);
+    printf("%i\n", account.stage);
+    //strcpy(ign,check_filename);
+    f1 = fopen(check_filename,"rb");
+    if(f1 == NULL){
+    printf("ERROR OPENING FILE");
+    fclose(f1);
     }
-    // if(account.stage == 2){
-    //     stage2();
-    // }
+    else{
+        //while(fread(&account, sizeof(struct user),1,f1)!=EOF){
+        while(fscanf(f1,"%i",acc.stage)!=EOF){
+            if(acc.stage == stage_1){
+            system("cls"); stage1(); break;
+            }
+            else if(acc.stage == stage_2){
+            system("cls"); stage2(); break;
+            //fclose(f1); system("cls"); stage2();
+            }
+            else{
+                printf("ERROR"); exit(0);
+            }
+        }
+    }
+    fclose(f1); 
+
     // if(account.stage == 3){
     //     stage3();
     // }
@@ -255,9 +290,102 @@ void math_whiz(){
     // }
 }//END OF MATH WHIZ//
 
-/*
+void option_prompt(){
+    if(counter > 0){
+    printf("\n\n--Press any key to TRY AGAIN.");
+    printf("\n--Press [B] to go back to MENU.");
+    printf("\n--Press ESC to EXIT & LOG OUT.");
+    main_option = getch();
+    main_option = toupper(main_option);
+        switch (main_option){
+            
+        case 'B' : //Press B to go back to menu
+        main_option = 01; level = 1; counter = 0;
+        system("cls"); menu(); break;
 
-Stage 1
+        case 27 : // Press ESC to EXIT & LOG OUT
+        exit(0);
+                
+        default: //Press any key to TRY AGAIN
+        main_option = 01; level = 1; counter = 0;
+        system("cls"); 
+        }
+    }
+    else{
+    printf("\n\n--Press any key to NEXT STAGE.");
+    printf("\n--Press [B] to go back to MENU.");
+    printf("\n--Press ESC to EXIT & LOG OUT.");
+    main_option = getch();
+    main_option = toupper(main_option);
+        switch(main_option){
+            
+        case 'B' : //Press [B] to go back to MENU
+        main_option = 00; level = 1; counter = 0;  
+        system("cls"); menu(); break;
+
+        case 27 : //Press ESC to EXIT & LOG OUT
+        exit(0);
+
+        default: //Press any key to NEXT STAGE
+        main_option = 00; level = 1; counter = 0;
+        system("cls"); break;
+        }
+    }
+}
+
+void stage1(){
+    int n1, n2, sys_ans, user_ans;
+    struct user account;
+    FILE *f1;
+    srand(time(NULL));
+    printf("%s", check_filename);
+    f1 = fopen(check_filename, "a");
+    if(f1 == NULL){ 
+    printf("ERROR_FETCHING_FILES");
+    }
+    else{
+        while(main_option != 27 && main_option != 'B'){
+        printf("STAGE 1\n\n\n");
+            do{
+            n1 = (rand() % 25) + 1;
+            n2 = (rand() % 25) + 1;
+            if(level <= 2){
+            printf("\n\nLEVEL %i\n",level);
+            sys_ans = addition(n1,n2);
+            printf("%i + %i = ", n1, n2);
+            scanf("%i", &user_ans);
+            identifier(user_ans, sys_ans);
+            level++;
+            }
+            else if(level >= 3){
+            printf("\n\nLEVEL %i\n",level);
+            sys_ans = subtract(n1,n2);
+            printf("%i - %i = ", n1, n2);
+            scanf("%i", &user_ans);
+            identifier(user_ans, sys_ans);
+            level++;
+            }
+            //if(level > 5) break; AUTO BREAK NA YUNG WHILE LOOP KAPAG LUMAGPAS SA LEVEL 5
+            }while(level<=5);
+        printf("\n\nYOU HAVE %i WRONG ANSWERS", counter);
+        option_prompt();
+        if(main_option == 00) {
+        break;
+        }
+        }
+    acc.stage=2;
+    fprintf(f1, "\n%i", acc.stage);
+    //fwrite(&account, sizeof(struct user),1,f1);
+    fclose(f1);
+    }
+stage2(); getch();
+}
+
+void stage2(){
+    printf("STAGE 2 NA!");
+}
+
+/*Stage 1
 level 1 correct 
 level 2 correct
 level 3 correct
@@ -283,78 +411,4 @@ level 5 correct
 Press any key to continue to the next stage.
 Press B to go back to dashboard
 Press ESC to log out and exit
-
 */
-
-//UNDER CONSTRUCTION PA ITO MUNA SA NGAYON, PINAPATULOG NA NI INA
-//TIME CHECK 2:33 AM, DEC 3, 2023
-
-void stage1(){
-    char option;
-    int n1, n2, sys_ans, user_ans, level=1;
-    srand(time(NULL));
-    
-    while(option != 27 && option != 'B'){
-    printf("STAGE 1\n\n\n");
-        do{
-        if(level <= 2){
-        n1 = (rand() % 25) + 1;
-        n2 = (rand() % 25) + 1;
-        printf("\n\nLEVEL %i\n",level);
-        sys_ans = addition(n1,n2);
-        printf("%i + %i = ", n1, n2);
-        scanf("%i", &user_ans);
-        identifier(user_ans, sys_ans);
-        level++;
-        }
-        else if(level >= 3){
-        n1 = (rand() % 25) + 1;
-        n2 = (rand() % 25) + 1;
-        printf("\n\nLEVEL %i\n",level);
-        sys_ans = subtraction(n1,n2);
-        printf("%i - %i = ", n1, n2);
-        scanf("%i", &user_ans);
-        identifier(user_ans, sys_ans);
-        level++;
-        }
-        //if(level > 5) break; AUTO BREAK NA YUNG WHILE LOOP KAPAG LUMAGPAS SA LEVEL 5
-        }while(level<=5);
-    printf("\n\nYOU HAVE %i WRONG ANSWERS", counter);
-    if(counter > 0){
-    printf("\n\nPress any key to continue to the try again.");
-    printf("\n\nPress [B] to go back to dashboard.");
-    printf("\nPress ESC to log out and exit.");
-    option = getch();
-    option = toupper(option);
-        if(option == 27){//ascii code of [ESC] is 27
-        exit(0);
-        }   
-        else if(option == 'B'){
-        option = 00; level = 1; counter = 0; system("cls");            
-        menu(); break;
-        }
-        else{
-        option = 00; level = 1; counter = 0; system("cls"); 
-        continue;
-        }
-    }
-    else{
-    printf("\n\nPress any key to continue to the next stage.");
-    printf("\n\nPress [B] to go back to dashboard.");
-    printf("\nPress ESC to log out and exit.");
-    option = getch();
-    option = toupper(option);
-        if(option == 27){//ascii code of [ESC] is 27
-        exit(0); break;
-        }
-        else if(option == 'B'){
-        option = 00; level = 1; counter = 0; system("cls");            
-        menu(); break;
-        }
-        else{
-        option = 00; level = 1; counter = 0;
-        printf("\nSTAGE 2 na par call nalang function"); break;
-        }
-    }
-    }
-}
