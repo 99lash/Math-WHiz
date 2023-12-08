@@ -15,8 +15,12 @@ int subtraction(int n1, int n2) {
   return n1 - n2; 
 }
 
+float divide(float n1, int n2){
+  return n1 / n2;
+}
 
-void identifier(int a, int b){
+
+void identifier(double a, double b){
     if(a == b){ 
     printf("KORIQUE!!!");
     }
@@ -25,6 +29,18 @@ void identifier(int a, int b){
     counter++;
     }
 }
+void identifier_1(int a, int b){
+    if(a == b){ 
+    printf("KORIQUE!!!");
+    }
+    else if(a != b){
+    printf("ENGKK!!");
+    counter++;
+    }
+}
+
+void stage1();
+void stage2();
 
 void decision_prompt(){
    if(counter > 0){
@@ -99,8 +115,35 @@ void main(){
     //if(level > 5) break; AUTO BREAK NA YUNG WHILE LOOP KAPAG LUMAGPAS SA LEVEL 5
     }
     printf("\n\nYOU HAVE %i WRONG ANSWERS", counter);
-    decision_prompt();//PROMPTS AN OPTION WHETHER IF THE USER HAD WRONG OR NO WRONG ANSWERS. 
+    decision_prompt();//PROMPTS AN OPTION WHETHER IF THE USER HAD WRONG OR NO WRONG ANSWERS.
+    if(main_option = 00); break;
     }while(main_option != 27 && main_option != 'B');
+stage2();
+}
+
+void stage2(){ //DIVISION
+    int n1, n2;
+    float sys_ans, user_ans;
+    srand(time(NULL));
+    while(main_option != 27 && main_option != 'B'){
+        printf("STAGE 2\n");
+        do{
+            n1 = (rand() % 10) + 1;
+            n2 = (rand() % 10) + 1;
+            printf("\n\nLEVEL %i\n",level);
+            sys_ans = divide(n1,n2);
+            printf("bot ans: %f\n", sys_ans);
+            printf("%d ÷ %d = ", n1, n2);
+            scanf("%f", &user_ans);
+            identifier_1(user_ans, sys_ans);
+            level++;
+            //if level > 5 break; AUTO BREAK NA YUNG WHILE LOOP KAPAG LUMAGPAS SA LEVEL 5
+        }while(level<=5);
+        printf("\n\nYOU HAVE %i WRONG ANSWERS", counter);
+        decision_prompt();
+    } 
+        //PROCEED SA NEXT STAGE PAG NAGBREAK, ELSE ULIT STAGE
+    printf("stage3");
 }
 /*
 
