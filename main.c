@@ -5,23 +5,26 @@
 #include <ctype.h>
 #include <time.h>
 
-int counter=0, level=1;
-char main_option, check_filename[20];
+void clrscr(void){
+    system("cls");
+}
 
-enum stages{
-    stage_1 = 1,
-    stage_2 = 2,
-    stage_3 = 3,
-    stage_4 = 4,
-    stage_5 = 5,
-    stage_god = 6
+int counter=0, level=1;
+char MW_OPTION, check_filename[20];
+
+/* enum stages{
+    stage_1 = 1,stage_2 = 2,stage_3 = 3,stage_4 = 4,stage_5 = 5,stage_god = 6
 };
+ */
+const int stg_1=1, stg_2=2, stg_3=3, stg_4=4, stg_5=5, stg_godMode=6; 
+
 struct user{
     char username[20], password[12];
     int stage;
-};
+}glob_acc;
 
-struct user acc1;
+
+
 //PROTOTYPE FUNCTIONS OF SYSTEM OUTLINE/GUIDELINES FLOW
 void signup();
 void login();
@@ -40,17 +43,15 @@ int add_sub(int n1, int n2, int n3) { return n1 + n2 - n3; }
 float mult_div(float n1, float n2, float n3) { return n1 * n2 / n3; }
 float all_op(float n1, float n2, float n3, float n4, float n5) {return n1 * n2 / n3 + n4 - n5;}
 
-
 //Correct or Wrong Identifier
-void identifier(int a, int b){
-    if(a == b) printf("KORIQUE!!!");
+void identifier(int a, int b){//for int
+    if(a == b) printf("KORIQUE!!!"); 
     else if(a != b){
         printf("ENGKK!!");
         counter++;
     }
 }
-
-void identifier1(float a, float b){
+void fIdentifier(float a, float b){// for point decimals, [FLOAT]
     if(a == b) printf("KORIQUE!!!");
     else if(a != b){
         printf("ENGKK!!");
@@ -71,6 +72,8 @@ void option_prompt();
 
 int main(){
     char option;
+    clrscr();
+    //system("cls");
     //dashboard//
     while(option != '1' && option != '2' && option != '3'){ //ASCII CODE [1] is 49, [2] is 50, [3] is 51//
     printf("MATH WHIZ\n\n\n");
@@ -81,7 +84,7 @@ int main(){
             case '1' : system("cls"); login(); break;
             case '2' : system("cls"); signup(); break;
             case '3' : system("cls");  break;
-            default  : printf("\nINVALID KEY SELECTION\n"); getch(); system("cls"); continue;
+            default  : printf("\nINVALID KEY SELECTION\n"); getch(); system("cls"); 
         }
     }
 return 0;
@@ -90,8 +93,9 @@ return 0;
  //GLOBAL VARIABLE DECLARATION FOR CONTROL OF STAGES RE-DIRECTION
 void signup(){
     // int tmp=0;
+    clrscr();
     char username_checker[20], password_checker[12], confirm_password[12], file_name[20], option;
-    struct user acc;
+    struct user loc_acc;
     FILE *f1;
 
     do{
@@ -104,42 +108,37 @@ void signup(){
         scanf("%s", &password_checker);
         strcpy(file_name, username_checker);
         if(!strcmp(password_checker, confirm_password)){
-            strcpy(acc.password,confirm_password);
+            strcpy(loc_acc.password,confirm_password);
             //strcpy(acc.username,file_name);
-            acc.stage = stage_1;
+            loc_acc.stage = stg_1;
             f1 = fopen(strcat(file_name,".dat"),"w");
             //fprintf(f1,"%s\t%i\n",acc.password); //WRITE TO NG STRING SA FILE HEHE 
-            fwrite(&acc,sizeof(struct user),1,f1);    // PANG WRITE  LANG NG BINARY CANCEL MUNA  
+            fwrite(&loc_acc,sizeof(struct user),1,f1);    // PANG WRITE  LANG NG BINARY CANCEL MUNA  
             printf("\nSIGN UP SUCCESS\nPRESS ANY KEY TO CONTINUE");
             fclose(f1);
             f1 = fopen("leaderboards.txt","a");
-            fprintf(f1, "%s\t%i\n",acc.username,acc.stage);
-            fclose(f1);
-            getch();
-            option = 01;
-            system("cls");
+            fprintf(f1, "%s\t%i\n",loc_acc.username,loc_acc.stage);
+            fclose(f1); 
+            option = 00; getch(); system("cls");
             login();
-            }
+        }
         else{//ascii code of [ESC] is 27
-            while(option != 27){ 
+            while(option!=27){ 
                 printf("\nPASSWORD DOES NOT MATCH\n\nPress any key to sign up again.\nPress ESC to go back to dashboard\n");
                 option = getch();
-                if(option == 27){ 
-                    option = 01;
-                    break;
-                }
+                if(option == 27) option = 00; 
                 break;
             }
         }
         system("cls");
-    }while(option!=01);
-main(); 
+    }while(option!=00);
+    main(); 
 }//END OF SIGNUP FUNCTION//
 
 //LOGIN//
 void login(){
     char username_checker[20], password_checker[12];
-    FILE *f1;
+    FILE *fr;
 
     printf("LOG IN\n\n\n");
     printf("\nEnter username:\t");
@@ -148,9 +147,9 @@ void login(){
     scanf("%s", &password_checker);
     strcpy(check_filename,username_checker);
     //printf("%s", check_filename); getch();
-    f1 = fopen(strcat(check_filename,".dat"),"r");
-    if(f1 == NULL){
-        fclose(f1);
+    fr = fopen(strcat(check_filename,".dat"),"r");
+    if(fr == NULL){
+        fclose(fr);
         printf("\nUSER DOES NOT EXIST");
         getch();
         system("cls");
@@ -158,13 +157,13 @@ void login(){
     }
     else{
         //(fscanf(f1,"%s", account.password)!=EOF){
-        while(fread(&acc1, sizeof(struct user),1,f1)!=EOF){ //READ BINARY FROM FILE
-            if(!strcmp(acc1.password,password_checker)){
-            fclose(f1);
+        while(fread(&glob_acc, sizeof(struct user),1,fr)!=EOF){ //READ BINARY FROM FILE
+            if(!strcmp(glob_acc.password,password_checker)){
+            fclose(fr);
             system("cls"); menu(); break;
             }
             else{
-            fclose(f1);
+            fclose(fr);
             printf("\nINCORRECT PASSWORD");getch();
             system("cls"); main(); break;
             }
@@ -206,16 +205,19 @@ void menu(){
 }//END OF MENU FUNCTION//
 
 void about(){
-    char option, buffer[255];
-    FILE *fabt;
+    char option, STORE_CONTENT[1024];
+    FILE *fr;
+
+    int MAX_BUFFER_LINE = sizeof(STORE_CONTENT);
+    printf("SIZE %d", MAX_BUFFER_LINE); getch();
     do{
-        fabt = fopen("about1.txt", "r");
-        if(fabt == NULL) printf("ERROR_FILE_MISSING");
+        fr = fopen("about1.txt", "r");
+        if(fr == NULL) printf("ERROR_FILE_MISSING");
         else{
-            while(fgets(buffer,255,fabt)!=NULL)
-            printf("%s", buffer);
+            while(fgets(STORE_CONTENT,MAX_BUFFER_LINE,fr)!=NULL)
+            printf("%s", STORE_CONTENT);
         }
-        fclose(fabt);
+        fclose(fr);
         printf("Press ESC to go back");
         option = getch();
         option = toupper(option);
@@ -249,54 +251,50 @@ void leaderboards(){
 void math_whiz(){
     //int stage_1=1, stage_2=2, stage_3=3, stage_4=4;
     char ign[20];
-    struct user account;
-    FILE *f1;
+    struct user loc_acc;
+    FILE *fr;
      
     //printf("%i\n", account.stage); getch(); //wag pansinin wala to. 
     //strcpy(ign,check_filename);
-    f1 = fopen(check_filename,"r");
-    if(f1 == NULL){
+    fr = fopen(check_filename,"r");
+    if(fr == NULL){
         printf("ERROR OPENING FILE");
-        fclose(f1); exit(0);
+        fclose(fr); exit(0);
     }
     else{
-        while(fread(&account, sizeof(struct user),1,f1)!=EOF){
+        while(fread(&loc_acc, sizeof(struct user),1,fr)!=EOF){
         //while(fscanf(f1,"%i",acc.stage)!=EOF){
-            if(account.stage == stage_1){
-                printf("%i\n", account.stage); getch(); 
+            if(loc_acc.stage == stg_1){
+                printf("%i\n", loc_acc.stage); getch(); 
                 system("cls"); stage1(); break;
             }
-            else if(account.stage == stage_2){
-                system("cls");
-                printf("%i\n", account.stage); stage2(); break;
-            //fclose(f1); system("cls"); stage2();
+            else if(loc_acc.stage == stg_2){
+                printf("%i\n", loc_acc.stage); getch(); 
+                system("cls"); stage2(); break;
             }
-            else if(account.stage == stage_3){
-                system("cls");
-                printf("%i\n", account.stage); stage3(); break;
-            //fclose(f1); system("cls"); stage2();
+            else if(loc_acc.stage == stg_3){
+                printf("%i\n", loc_acc.stage); getch(); 
+                system("cls"); stage3(); break;
             }
-            else if(account.stage == stage_4){
-                system("cls");
-                printf("%i\n", account.stage); stage4(); break;
-            //fclose(f1); system("cls"); stage2();
+            else if(loc_acc.stage == stg_4){
+                printf("%i\n", loc_acc.stage); getch(); 
+                system("cls"); stage4(); break;
             }
-            else if(account.stage == stage_5){
-                system("cls");
-                printf("%i\n", account.stage); stage3(); break;
-            //fclose(f1); system("cls"); stage2();
+            else if(loc_acc.stage == stg_5){
+                printf("%i\n", loc_acc.stage); getch(); 
+                system("cls"); stage5(); break;
+
             }
-            else if(account.stage == stage_god){
-                system("cls");
-                printf("%i\n", account.stage); stage3(); break;
-            //fclose(f1); system("cls"); stage2();
+            else if(loc_acc.stage == stg_godMode){
+                printf("%i\n", loc_acc.stage); getch(); 
+                system("cls"); final_stage(); break;
             }
             else{
-                printf("ERROR"); getch(); exit(0); 
+                printf("ERROR ON LOADING OF LOADED PROGRESS"); getch(); exit(0); 
             }
         }
     }
-    fclose(f1); 
+    fclose(fr); 
 
     // if(account.stage == 3){
     //     stage3();
@@ -314,19 +312,18 @@ void option_prompt(){
     printf("\n\n--Press any key to TRY AGAIN.");
     printf("\n--Press [B] to go back to MENU.");
     printf("\n--Press ESC to EXIT & LOG OUT.");
-    main_option = getch();
-    main_option = toupper(main_option);
-        switch (main_option){
-            
+    MW_OPTION = getch();
+    MW_OPTION = toupper(MW_OPTION);
+        switch (MW_OPTION){
             case 'B' : //Press B to go back to menu
-            main_option = 01; level = 1; counter = 0;
+            MW_OPTION = 01; level = 1; counter = 0;
             system("cls"); menu(); break;
 
             case 27 : // Press ESC to EXIT & LOG OUT
             exit(0);
                     
             default: //Press any key to TRY AGAIN
-            main_option = 01; level = 1; counter = 0;
+            MW_OPTION = 01; level = 1; counter = 0;
             system("cls"); 
         }
     }
@@ -334,19 +331,18 @@ void option_prompt(){
     printf("\n\n--Press any key to NEXT STAGE.");
     printf("\n--Press [B] to go back to MENU.");
     printf("\n--Press ESC to EXIT & LOG OUT.");
-    main_option = getch();
-    main_option = toupper(main_option);
-        switch(main_option){
-            
+    MW_OPTION = getch();
+    MW_OPTION = toupper(MW_OPTION);
+        switch(MW_OPTION){ 
             case 'B' : //Press [B] to go back to MENU
-            main_option = 00; level = 1; counter = 0;  
+            MW_OPTION = 00; level = 1; counter = 0;  
             system("cls"); menu(); break;
 
             case 27 : //Press ESC to EXIT & LOG OUT
             exit(0);
 
             default: //Press any key to NEXT STAGE
-            main_option = 00; level = 1; counter = 0;
+            MW_OPTION = 00; level = 1; counter = 0;
             system("cls"); break;
         }
     }
@@ -354,11 +350,11 @@ void option_prompt(){
 
 void stage1(){ //ADDITION & SUBTRACTION
     int n1, n2, sys_ans, user_ans;
-    struct user account;
-    FILE *f1;
+    FILE *fw;
+
     srand(time(NULL));
     printf("%s", check_filename);
-    while(main_option != 27 && main_option != 'B'){
+    while(MW_OPTION != 27 && MW_OPTION != 'B'){
         printf("STAGE 1\n");
         do{
             n1 = (rand() % 25) + 1;
@@ -383,31 +379,30 @@ void stage1(){ //ADDITION & SUBTRACTION
         }while(level<=5);
         printf("\n\nYOU HAVE %i WRONG ANSWERS", counter);
         option_prompt();
-        if(main_option == 00) break; 
+        if(MW_OPTION == 00) break; 
         //PROCEED SA NEXT STAGE PAG NAGBREAK, ELSE ULIT STAGE
     }
-    f1 = fopen(check_filename, "w");
-    if(f1 == NULL){ 
+    fw = fopen(check_filename, "w");
+    if(fw == NULL){ 
         printf("ERROR_FETCHING_FILES");
     }
     else{
-        acc1.stage = stage_2;
-        printf("\n%i", account.stage);
+        glob_acc.stage = stg_2;
         getch();
         //fprintf(f1, "\n%i", account.stage);
-        fwrite(&acc1, sizeof(struct user),1,f1);
-        fclose(f1);
-        }
-    stage2();
+        fwrite(&glob_acc, sizeof(struct user),1,fw);
+        fclose(fw);
     }
+    stage2();
+}
 
 void stage2(){ //MULTIPLICATION
     int n1, n2, sys_ans, user_ans;
-    struct user account;
-    FILE *f1;
+    FILE *fw;
+
     srand(time(NULL));
     printf("%s", check_filename);
-    while(main_option != 27 && main_option != 'B'){
+    while(MW_OPTION != 27 && MW_OPTION != 'B'){
         printf("STAGE 2\n");
         do{
             n1 = (rand() % 10) + 1;
@@ -422,32 +417,29 @@ void stage2(){ //MULTIPLICATION
         }while(level<=5);
         printf("\n\nYOU HAVE %i WRONG ANSWERS", counter);
         option_prompt();
-        if(main_option == 00) break; 
+        if(MW_OPTION == 00) break; 
         //PROCEED SA NEXT STAGE PAG NAGBREAK, ELSE ULIT STAGE
     }
-    f1 = fopen(check_filename, "w");
-    if(f1 == NULL){ 
+    fw = fopen(check_filename, "w");
+    if(fw == NULL){ 
         printf("ERROR_FETCHING_FILES");
     }
     else{
-        acc1.stage = stage_3;
-        printf("\n%i", account.stage);
-        getch();
+        glob_acc.stage = stg_3;
         //fprintf(f1, "\n%i", account.stage);
-        fwrite(&acc1, sizeof(struct user),1,f1);
-        fclose(f1);
-        }
+        fwrite(&glob_acc, sizeof(struct user),1,fw);
+        fclose(fw);
+    }
     stage3();
 }
 
 void stage3(){ //DIVISION
-    int n1, n2; 
-    float sys_ans, user_ans;
-    struct user account;
-    FILE *f1;
+    float n1, n2, sys_ans, user_ans;
+    FILE *fw;
+
     srand(time(NULL));
     printf("%s", check_filename);
-    while(main_option != 27 && main_option != 'B'){
+    while(MW_OPTION != 27 && MW_OPTION != 'B'){
         printf("STAGE 3\n");
         do{
             n1 = (rand() % 10) + 1;
@@ -457,34 +449,142 @@ void stage3(){ //DIVISION
             printf("bot ans: %f\n", sys_ans);
             printf("%.f / %.f = ", n1, n2);
             scanf("%f", &user_ans);
-            identifier1(user_ans, sys_ans);
+            fIdentifier(user_ans, sys_ans);
             level++;
             //if level > 5 break; AUTO BREAK NA YUNG WHILE LOOP KAPAG LUMAGPAS SA LEVEL 5
         }while(level<=5);
         printf("\n\nYOU HAVE %i WRONG ANSWERS", counter);
         option_prompt();
-        if(main_option == 00) break; 
+        if(MW_OPTION == 00) break; 
         //PROCEED SA NEXT STAGE PAG NAGBREAK, ELSE ULIT STAGE
     }
-    f1 = fopen(check_filename, "w");    
-    if(f1 == NULL){ 
+    fw = fopen(check_filename, "w");    
+    if(fw == NULL){ 
         printf("ERROR_FETCHING_FILES");
+        fclose(fw);
+        exit(0);
     }
     else{
-        acc1.stage = stage_4;
-        printf("\n%i", account.stage);
-        getch();
+        glob_acc.stage = stg_4;
         //fprintf(f1, "\n%i", account.stage);
-        fwrite(&acc1, sizeof(struct user),1,f1);
-        fclose(f1);
-        }
+        fwrite(&glob_acc, sizeof(struct user),1,fw);
+        fclose(fw);
+    }
     stage4();
 }
 
-void stage4(){
-    printf("stage4 na"); getch();
+void stage4(){ //MIXED OF ADDITION AND SUBTRACTION
+    int n1, n2, n3, sys_ans, user_ans;
+    FILE *fw;
+
+    srand(time(NULL));
+    printf("%s", check_filename);
+    while(MW_OPTION != 27 && MW_OPTION != 'B'){
+        printf("STAGE 3\n");
+        do{
+            n1 = (rand() % 10) + 1;
+            n2 = (rand() % 10) + 1;
+            n3 = (rand() % 10) + 1;
+            printf("\n\nLEVEL %i\n",level);
+            sys_ans = add_sub(n1, n2, n3);
+            printf("bot ans: %f\n", sys_ans);
+            printf("%i + %i - %i = ", n1, n2, n3);
+            scanf("%i", &user_ans);
+            identifier(user_ans, sys_ans);
+            level++;
+            //if level > 5 break; AUTO BREAK NA YUNG WHILE LOOP KAPAG LUMAGPAS SA LEVEL 5
+        }while(level<=5);
+        printf("\n\nYOU HAVE %i WRONG ANSWERS", counter);
+        option_prompt();
+        if(MW_OPTION == 00) break; 
+        //PROCEED SA NEXT STAGE PAG NAGBREAK, ELSE ULIT STAGE
+    }
+    fw = fopen(check_filename, "w");    
+    if(fw == NULL){ 
+        printf("ERROR_FETCHING_FILES");
+        fclose(fw);
+        exit(0);
+    }
+    else{
+        glob_acc.stage = stg_5;
+        //fprintf(f1, "\n%i", account.stage);
+        fwrite(&glob_acc, sizeof(struct user),1,fw);
+        fclose(fw);
+    }
+    stage5();
 }
 
+void stage5(){ //MIXED OF MULTIPLICATION AND DIVISION
+    float n1, n2, n3, sys_ans, user_ans;
+    FILE *fw;
+
+    srand(time(NULL));
+    printf("%s", check_filename);
+    while(MW_OPTION != 27 && MW_OPTION != 'B'){
+        printf("STAGE 3\n");
+        do{
+            n1 = (rand() % 10) + 1;
+            n2 = (rand() % 10) + 1;
+            n3 = (rand() % 10) + 1;
+            printf("\n\nLEVEL %i\n",level);
+            sys_ans = mult_div(n1, n2, n3);
+            printf("bot ans: %f\n", sys_ans);
+            printf("%.f x  %.f / %.f = ", n1, n2, n3);
+            scanf("%f", &user_ans);
+            fIdentifier(user_ans, sys_ans);
+            level++;
+            //if level > 5 break; AUTO BREAK NA YUNG WHILE LOOP KAPAG LUMAGPAS SA LEVEL 5
+        }while(level<=5);
+        printf("\n\nYOU HAVE %i WRONG ANSWERS", counter);
+        option_prompt();
+        if(MW_OPTION == 00) break; 
+        //PROCEED SA NEXT STAGE PAG NAGBREAK, ELSE ULIT STAGE
+    }
+    fw = fopen(check_filename, "w");    
+    if(fw == NULL){ 
+        printf("ERROR_FETCHING_FILES");
+        fclose(fw);
+        exit(0);
+    }
+    else{
+        glob_acc.stage = stg_godMode;
+        //fprintf(f1, "\n%i", account.stage);
+        fwrite(&glob_acc, sizeof(struct user),1,fw);
+        fclose(fw);
+    }
+    final_stage();
+}
+
+void final_stage(){ //MIXED OF ALL OPERATORS
+    float n1, n2, n3, n4, n5, sys_ans, user_ans;
+
+    srand(time(NULL));
+    printf("%s", check_filename);
+    while(MW_OPTION != 27 && MW_OPTION != 'B'){
+        printf("STAGE 3\n");
+        do{
+            n1 = (rand() % 10) + 1;
+            n2 = (rand() % 10) + 1;
+            n3 = (rand() % 10) + 1;
+            n4 = (rand() % 10) + 1;
+            n5 = (rand() % 10) + 1;
+            printf("\n\nLEVEL %i\n",level);
+            sys_ans = all_op(n1, n2, n3, n4, n5);
+            printf("bot ans: %f\n", sys_ans);
+            printf("%.f +  %.f - %.f x %.f / %.f = ", n1, n2, n3, n4, n5);
+            scanf("%f", &user_ans);
+            fIdentifier(user_ans, sys_ans);
+            level++;
+            //if level > 5 break; AUTO BREAK NA YUNG WHILE LOOP KAPAG LUMAGPAS SA LEVEL 5
+        }while(level<=5);
+        printf("\n\nYOU HAVE %i WRONG ANSWERS", counter);
+        option_prompt();
+        if(MW_OPTION == 00) break; 
+        //PROCEED SA NEXT STAGE PAG NAGBREAK, ELSE ULIT STAGE
+    }
+    printf("\n\nCONGRATULATIONS!\n MATH WHIZ TEAM ARE GLAD FOR YOU TO MADE IT HERE.\n");
+    printf("You are now a certified \"MATH WHIZ\"");
+}
 /*Stage 1
 level 1 correct 
 level 2 correct
