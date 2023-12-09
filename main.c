@@ -11,19 +11,12 @@ void clrscr(void){
 
 int counter=0, level=1;
 char MW_OPTION, check_filename[20];
-
-/* enum stages{
-    stage_1 = 1,stage_2 = 2,stage_3 = 3,stage_4 = 4,stage_5 = 5,stage_god = 6
-};
- */
 const int stg_1=1, stg_2=2, stg_3=3, stg_4=4, stg_5=5, stg_godMode=6; 
 
 struct user{
     char username[20], password[12];
     int stage;
 }glob_acc;
-
-
 
 //PROTOTYPE FUNCTIONS OF SYSTEM OUTLINE/GUIDELINES FLOW
 void signup();
@@ -73,7 +66,6 @@ void option_prompt();
 int main(){
     char option;
     clrscr();
-    //system("cls");
     //dashboard//
     while(option != '1' && option != '2' && option != '3'){ //ASCII CODE [1] is 49, [2] is 50, [3] is 51//
     printf("MATH WHIZ\n\n\n");
@@ -96,7 +88,7 @@ void signup(){
     clrscr();
     char username_checker[20], password_checker[12], confirm_password[12], file_name[20], option;
     struct user loc_acc;
-    FILE *f1;
+    FILE *fw, *fr;
 
     do{
         printf("SIGN UP\n\n\n");
@@ -107,28 +99,40 @@ void signup(){
         printf("\nRepeat preferred password:\t");
         scanf("%s", &password_checker);
         strcpy(file_name, username_checker);
-        if(!strcmp(password_checker, confirm_password)){
-            strcpy(loc_acc.password,confirm_password);
-            //strcpy(acc.username,file_name);
-            loc_acc.stage = stg_1;
-            f1 = fopen(strcat(file_name,".dat"),"w");
-            //fprintf(f1,"%s\t%i\n",acc.password); //WRITE TO NG STRING SA FILE HEHE 
-            fwrite(&loc_acc,sizeof(struct user),1,f1);    // PANG WRITE  LANG NG BINARY CANCEL MUNA  
-            printf("\nSIGN UP SUCCESS\nPRESS ANY KEY TO CONTINUE");
-            fclose(f1);
-            f1 = fopen("leaderboards.txt","a");
-            fprintf(f1, "%s\t%i\n",loc_acc.username,loc_acc.stage);
-            fclose(f1); 
-            option = 00; getch(); system("cls");
-            login();
-        }
-        else{//ascii code of [ESC] is 27
-            while(option!=27){ 
-                printf("\nPASSWORD DOES NOT MATCH\n\nPress any key to sign up again.\nPress ESC to go back to dashboard\n");
-                option = getch();
-                if(option == 27) option = 00; 
-                break;
+        fr = fopen(strcat(file_name,".dat"),"r");
+        //printf("\n%s",check_filename);getch();
+        if(fr == NULL){
+            fclose(fr);
+            if(!strcmp(password_checker, confirm_password)){
+                strcpy(loc_acc.password,confirm_password);
+                //strcpy(acc.username,file_name);
+                loc_acc.stage = stg_1;
+                //printf("\n%s", file_name); getch();
+                fw = fopen(file_name,"w");
+                //fprintf(f1,"%s\t%i\n",acc.password); //WRITE TO NG STRING SA FILE HEHE 
+                fwrite(&loc_acc,sizeof(struct user),1,fw);    // PANG WRITE  LANG NG BINARY CANCEL MUNA  
+                printf("\nSIGN UP SUCCESS\nPRESS ANY KEY TO CONTINUE");
+                fclose(fw);
+                
+                fw = fopen("leaderboards.txt","a");
+                fprintf(fw, "%s\t%i\n",loc_acc.username,loc_acc.stage);
+                fclose(fw); 
+                option = 00; getch(); system("cls");
+                login();
             }
+            else{//ascii code of [ESC] is 27
+                while(option!=27){ 
+                    printf("\nPASSWORD DOES NOT MATCH\n\nPress any key to sign up again.\nPress ESC to go back to dashboard\n");
+                    option = getch();
+                    if(option == 27) option = 00; 
+                    break;
+                }
+            }
+        }
+        else{
+            printf("\nUSERNAME ALREADY EXIST");  getch();
+            //printf("else %s", file_name);
+            fclose(fr); main();
         }
         system("cls");
     }while(option!=00);
@@ -145,13 +149,12 @@ void login(){
     scanf("%s", &username_checker);
     printf("\nEnter password:\t");
     scanf("%s", &password_checker);
-    strcpy(check_filename,username_checker);
-    //printf("%s", check_filename); getch();
+    strcpy(check_filename,username_checker); //check_filename ay global variable
+    //printf("%s", check_filename); getch(); this line was only for checking the string value of username
     fr = fopen(strcat(check_filename,".dat"),"r");
     if(fr == NULL){
         fclose(fr);
-        printf("\nUSER DOES NOT EXIST");
-        getch();
+        printf("\nUSER DOES NOT EXIST"); getch();
         system("cls");
         main();
     }
@@ -205,17 +208,17 @@ void menu(){
 }//END OF MENU FUNCTION//
 
 void about(){
-    char option, STORE_CONTENT[1024];
+    char option, BUFFER_FCONTENT[1024];
     FILE *fr;
 
-    int MAX_BUFFER_LINE = sizeof(STORE_CONTENT);
-    printf("SIZE %d", MAX_BUFFER_LINE); getch();
+    int MAX_BUFFER_LINE = sizeof(BUFFER_FCONTENT);
+    //printf("SIZE %d", MAX_BUFFER_LINE); getch(); THIS LINE AY ONLY FOR CHECKING OF BUFFER VALUE IN BYTES 
     do{
         fr = fopen("about1.txt", "r");
         if(fr == NULL) printf("ERROR_FILE_MISSING");
         else{
-            while(fgets(STORE_CONTENT,MAX_BUFFER_LINE,fr)!=NULL)
-            printf("%s", STORE_CONTENT);
+            while(fgets(BUFFER_FCONTENT,MAX_BUFFER_LINE,fr)!=NULL)
+            printf("%s", BUFFER_FCONTENT);
         }
         fclose(fr);
         printf("Press ESC to go back");
