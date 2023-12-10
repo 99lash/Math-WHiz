@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <math.h>
 
 int counter=0, level=1;
 char main_option;
@@ -39,7 +40,6 @@ void identifier_1(int a, int b){
     }
 }
 
-void stage1();
 void stage2();
 
 void decision_prompt(){
@@ -91,6 +91,7 @@ void main(){
     
     do{
     printf("STAGE 1\n\n\n");
+    printf("KAHIT MALI LAHAT NEXT STAGE NA");
     while(level<=5){
     if(level <= 2){
     n1 = (rand() % 25) + 1;
@@ -122,8 +123,7 @@ stage2();
 }
 
 void stage2(){ //DIVISION
-    int n1, n2;
-    float sys_ans, user_ans;
+    float n1, n2, sys_ans, user_ans; 
     srand(time(NULL));
     while(main_option != 27 && main_option != 'B'){
         printf("STAGE 2\n");
@@ -132,8 +132,10 @@ void stage2(){ //DIVISION
             n2 = (rand() % 10) + 1;
             printf("\n\nLEVEL %i\n",level);
             sys_ans = divide(n1,n2);
-            printf("bot ans: %f\n", sys_ans);
-            printf("%d ÷ %d = ", n1, n2);
+            printf("REAL ANS : %f\n",sys_ans);
+            sys_ans = round(sys_ans);
+            printf("ROUND OFF ANS : %.2f\n",sys_ans);
+            printf("%.2ff ÷ %.2f = ", n1, n2);
             scanf("%f", &user_ans);
             identifier_1(user_ans, sys_ans);
             level++;
