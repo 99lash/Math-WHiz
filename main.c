@@ -4,9 +4,38 @@
 #include <conio.h>
 #include <ctype.h>
 #include <time.h>
+#include <math.h>
+
+#define ESC 27
+#define ENTER 13
+#define TAB 9
+#define BACKSPACE 8
 
 void clrscr(void){
     system("cls");
+}
+
+void hide_input(char password[12]){
+
+int i=0;
+char key;
+while(1){
+    key = getch();
+    if(key == TAB|| key == ENTER ){
+        password[i] = '\0';
+        break;
+    }
+    else if(key == BACKSPACE){
+        if(i>0){
+            i--;
+            printf("\b \b");
+        }
+    }
+    else{
+        password[i++] = key;
+        printf("* \b");
+    }
+}
 }
 
 int counter=0, level=1;
@@ -67,16 +96,17 @@ int main(){
     char option;
     clrscr();
     //dashboard//
-    while(option != '1' && option != '2' && option != '3'){ //ASCII CODE [1] is 49, [2] is 50, [3] is 51//
+    while(option != '1' && option != '2' && option != 27){ //ASCII CODE [1] is 49, [2] is 50, [3] is 51//
     printf("MATH WHIZ\n\n\n");
-    printf("[1] LOG IN\n[2] SIGN UP\n[3] EXIT\n");
+    printf("[1] LOG IN\n[2] SIGN UP\n");
+    printf("\n\n\nPRESS ESC TO EXIT\n");
     option = getch();
-    option = toupper(option);
         switch(option){
-            case '1' : system("cls"); login(); break;
-            case '2' : system("cls"); signup(); break;
-            case '3' : system("cls");  break;
-            default  : printf("\nINVALID KEY SELECTION\n"); getch(); system("cls"); 
+            case '1' : clrscr(); login(); break;
+            case '2' : clrscr(); signup(); break;
+            case 27  : clrscr();  break;
+            default  : printf("\nINVALID KEY SELECTION\n"); getch();
+            clrscr(); break;
         }
     }
 return 0;
@@ -95,9 +125,11 @@ void signup(){
         printf("\nEnter preferred username:\t");
         scanf("%s", &username_checker);
         printf("\nEnter preferred password:\t");
-        scanf("%s", &confirm_password);
+        hide_input(password_checker);
+        //scanf("%s", &password_checker);
         printf("\nRepeat preferred password:\t");
-        scanf("%s", &password_checker);
+        hide_input(confirm_password);
+        //scanf("%s", &confirm_password);
         strcpy(file_name, username_checker);
         fr = fopen(strcat(file_name,".dat"),"r");
         //printf("\n%s",check_filename);getch();
@@ -117,24 +149,24 @@ void signup(){
                 fw = fopen("leaderboards.txt","a");
                 fprintf(fw, "%s\t%i\n",loc_acc.username,loc_acc.stage);
                 fclose(fw); 
-                option = 00; getch(); system("cls");
+                option = 00; getch(); clrscr();
                 login();
             }
             else{//ascii code of [ESC] is 27
-                while(option!=27){ 
+                while(option!=ESC){ 
                     printf("\nPASSWORD DOES NOT MATCH\n\nPress any key to sign up again.\nPress ESC to go back to dashboard\n");
                     option = getch();
-                    if(option == 27) option = 00; 
+                    if(option == ESC) option = 00; 
                     break;
                 }
             }
         }
         else{
-            printf("\nUSERNAME ALREADY EXIST");  getch();
-            //printf("else %s", file_name);
-            fclose(fr); main();
+            option = 00;
+            printf("\nUSERNAME ALREADY EXIST"); getch();
+            fclose(fr); 
         }
-        system("cls");
+        clrscr();
     }while(option!=00);
     main(); 
 }//END OF SIGNUP FUNCTION//
@@ -148,14 +180,15 @@ void login(){
     printf("\nEnter username:\t");
     scanf("%s", &username_checker);
     printf("\nEnter password:\t");
-    scanf("%s", &password_checker);
+    hide_input(password_checker);
+    //scanf("%s", &password_checker);
     strcpy(check_filename,username_checker); //check_filename ay global variable
     //printf("%s", check_filename); getch(); this line was only for checking the string value of username
     fr = fopen(strcat(check_filename,".dat"),"r");
     if(fr == NULL){
         fclose(fr);
         printf("\nUSER DOES NOT EXIST"); getch();
-        system("cls");
+        clrscr();
         main();
     }
     else{
@@ -163,12 +196,12 @@ void login(){
         while(fread(&glob_acc, sizeof(struct user),1,fr)!=EOF){ //READ BINARY FROM FILE
             if(!strcmp(glob_acc.password,password_checker)){
             fclose(fr);
-            system("cls"); menu(); break;
+            clrscr(); menu(); break;
             }
             else{
             fclose(fr);
             printf("\nINCORRECT PASSWORD");getch();
-            system("cls"); main(); break;
+            clrscr(); main(); break;
             }
         }
     }
@@ -178,7 +211,7 @@ void login(){
 void menu(){
     char option;
 
-    while(option!='P' && option!='L' && option!='A' && option!= 27){
+    while(option!='P' && option!='L' && option!='A' && option!= ESC){
         printf("MATH WHIZ\n\n\n");
         printf("[P] START\n[L] LEADERBOARDS\n[A] ABOUT");
         printf("\n\n\nPress ESC to EXIT & LOG OUT\t");
@@ -190,25 +223,25 @@ void menu(){
             break;
 
             case 'L' : //ascii code of [L] is 76//
-            system("cls");
+            clrscr();
             leaderboards();
             break;
             case 'A' : //ascii code of [A] is 65//
-            system("cls");
+            clrscr();
             about();
             break;
 
-            case 27 : //ascii code of [ESC] is 27//
-            system("cls"); exit(0);
+            case ESC : //ascii code of [ESC] is 27//
+            clrscr(); exit(0);
 
-            default: system("cls");
+            default: clrscr();
         }
     }
     
 }//END OF MENU FUNCTION//
 
 void about(){
-    char option, BUFFER_FCONTENT[1024];
+    char option, BUFFER_FCONTENT[256];
     FILE *fr;
 
     int MAX_BUFFER_LINE = sizeof(BUFFER_FCONTENT);
@@ -224,9 +257,9 @@ void about(){
         printf("Press ESC to go back");
         option = getch();
         option = toupper(option);
-        system("cls");
-    }while(option!=27); //ascii code of [ESC] is 27.
-    system("cls");
+        clrscr();
+    }while(option!=ESC); //ascii code of [ESC] is 27.
+    clrscr();
     menu();
 }
 //LEADERBOARDS// ---DISPLAY LANG MUNA GUYS, KULANG PA SA LOGIC YUNG PROGRAMMER---
@@ -244,9 +277,9 @@ void leaderboards(){
         printf("\nPress ESC to go back");
         option = getch();
         option = toupper(option);
-        system("cls");
-    }while(option!=27); //ascii code of [ESC] is 27.
-    system("cls");
+        clrscr();
+    }while(option!=ESC); //ascii code of [ESC] is 27.
+    clrscr();
     menu();
 }//END OF LEADERBOARDS//
 
@@ -268,29 +301,28 @@ void math_whiz(){
         while(fread(&loc_acc, sizeof(struct user),1,fr)!=EOF){
         //while(fscanf(f1,"%i",acc.stage)!=EOF){
             if(loc_acc.stage == stg_1){
-                printf("%i\n", loc_acc.stage); getch(); 
-                system("cls"); stage1(); break;
+                //printf("%i\n", loc_acc.stage); getch(); 
+                clrscr(); stage1(); break;
             }
             else if(loc_acc.stage == stg_2){
-                printf("%i\n", loc_acc.stage); getch(); 
-                system("cls"); stage2(); break;
+                //printf("%i\n", loc_acc.stage); getch(); 
+                clrscr(); stage2(); break;
             }
             else if(loc_acc.stage == stg_3){
-                printf("%i\n", loc_acc.stage); getch(); 
-                system("cls"); stage3(); break;
+                //printf("%i\n", loc_acc.stage); getch(); 
+                clrscr(); stage3(); break;
             }
             else if(loc_acc.stage == stg_4){
-                printf("%i\n", loc_acc.stage); getch(); 
-                system("cls"); stage4(); break;
+                //printf("%i\n", loc_acc.stage); getch(); 
+                clrscr(); stage4(); break;
             }
             else if(loc_acc.stage == stg_5){
-                printf("%i\n", loc_acc.stage); getch(); 
-                system("cls"); stage5(); break;
+                //printf("%i\n", loc_acc.stage); getch(); 
+                clrscr(); stage5(); break;
 
             }
-            else if(loc_acc.stage == stg_godMode){
-                printf("%i\n", loc_acc.stage); getch(); 
-                system("cls"); final_stage(); break;
+            else if(loc_acc.stage == stg_godMode){ 
+                clrscr(); final_stage(); break;
             }
             else{
                 printf("ERROR ON LOADING OF LOADED PROGRESS"); getch(); exit(0); 
@@ -320,14 +352,14 @@ void option_prompt(){
         switch (MW_OPTION){
             case 'B' : //Press B to go back to menu
             MW_OPTION = 01; level = 1; counter = 0;
-            system("cls"); menu(); break;
+            clrscr(); menu(); break;
 
-            case 27 : // Press ESC to EXIT & LOG OUT
+            case ESC : // Press ESC to EXIT & LOG OUT
             exit(0);
                     
             default: //Press any key to TRY AGAIN
             MW_OPTION = 01; level = 1; counter = 0;
-            system("cls"); 
+            clrscr(); 
         }
     }
     else{
@@ -339,14 +371,14 @@ void option_prompt(){
         switch(MW_OPTION){ 
             case 'B' : //Press [B] to go back to MENU
             MW_OPTION = 00; level = 1; counter = 0;  
-            system("cls"); menu(); break;
+            clrscr(); menu(); break;
 
-            case 27 : //Press ESC to EXIT & LOG OUT
+            case ESC : //Press ESC to EXIT & LOG OUT
             exit(0);
 
             default: //Press any key to NEXT STAGE
             MW_OPTION = 00; level = 1; counter = 0;
-            system("cls"); break;
+            clrscr(); break;
         }
     }
 }
@@ -356,8 +388,8 @@ void stage1(){ //ADDITION & SUBTRACTION
     FILE *fw;
 
     srand(time(NULL));
-    printf("%s", check_filename);
-    while(MW_OPTION != 27 && MW_OPTION != 'B'){
+    //printf("%s", check_filename);
+    while(MW_OPTION != ESC && MW_OPTION != 'B'){
         printf("STAGE 1\n");
         do{
             n1 = (rand() % 25) + 1;
@@ -404,8 +436,8 @@ void stage2(){ //MULTIPLICATION
     FILE *fw;
 
     srand(time(NULL));
-    printf("%s", check_filename);
-    while(MW_OPTION != 27 && MW_OPTION != 'B'){
+    //printf("%s", check_filename);
+    while(MW_OPTION != ESC && MW_OPTION != 'B'){
         printf("STAGE 2\n");
         do{
             n1 = (rand() % 10) + 1;
@@ -441,14 +473,15 @@ void stage3(){ //DIVISION
     FILE *fw;
 
     srand(time(NULL));
-    printf("%s", check_filename);
-    while(MW_OPTION != 27 && MW_OPTION != 'B'){
+    //printf("%s", check_filename);
+    while(MW_OPTION != ESC && MW_OPTION != 'B'){
         printf("STAGE 3\n");
         do{
             n1 = (rand() % 10) + 1;
             n2 = (rand() % 10) + 1;
             printf("\n\nLEVEL %i\n",level);
             sys_ans = divide(n1,n2);
+            round(sys_ans);
             printf("bot ans: %f\n", sys_ans);
             printf("%.f / %.f = ", n1, n2);
             scanf("%f", &user_ans);
@@ -481,9 +514,9 @@ void stage4(){ //MIXED OF ADDITION AND SUBTRACTION
     FILE *fw;
 
     srand(time(NULL));
-    printf("%s", check_filename);
-    while(MW_OPTION != 27 && MW_OPTION != 'B'){
-        printf("STAGE 3\n");
+    //printf("%s", check_filename);
+    while(MW_OPTION != ESC && MW_OPTION != 'B'){
+        printf("STAGE 4\n");
         do{
             n1 = (rand() % 10) + 1;
             n2 = (rand() % 10) + 1;
@@ -522,9 +555,9 @@ void stage5(){ //MIXED OF MULTIPLICATION AND DIVISION
     FILE *fw;
 
     srand(time(NULL));
-    printf("%s", check_filename);
-    while(MW_OPTION != 27 && MW_OPTION != 'B'){
-        printf("STAGE 3\n");
+    //printf("%s", check_filename);
+    while(MW_OPTION != ESC && MW_OPTION != 'B'){
+        printf("STAGE 5\n");
         do{
             n1 = (rand() % 10) + 1;
             n2 = (rand() % 10) + 1;
@@ -562,9 +595,9 @@ void final_stage(){ //MIXED OF ALL OPERATORS
     float n1, n2, n3, n4, n5, sys_ans, user_ans;
 
     srand(time(NULL));
-    printf("%s", check_filename);
-    while(MW_OPTION != 27 && MW_OPTION != 'B'){
-        printf("STAGE 3\n");
+    //printf("%s", check_filename);
+    while(MW_OPTION != ESC && MW_OPTION != 'B'){
+        printf("FINAL STAGE\n");
         do{
             n1 = (rand() % 10) + 1;
             n2 = (rand() % 10) + 1;
