@@ -8,9 +8,11 @@
 int counter=0, level=1;
 char main_option, check_filename[20];
 
+const int stg1=1,stg2=2,stg3=3,stg4=4,stg5=5;
+
 struct user{
     char username[20], password[12];
-    char stage[12];
+    int stage;
 };
 //PROTOTYPE FUNCTIONS OF SYSTEM OUTLINE/GUIDELINES FLOW
 void signup();
@@ -65,7 +67,7 @@ int main(){
             case '1' : system("cls"); login(); break;
             case '2' : system("cls"); signup(); break;
             case '3' : system("cls");  break;
-            default  : printf("\nINVALID KEY SELECTION\n"); getch(); system("cls"); continue;
+            default  : printf("\nINVALID KEY SELECTION\n"); getch(); system("cls"); 
         }
     }
 return 0;
@@ -73,14 +75,10 @@ return 0;
 //SIGNUP FUNCTION//
  //GLOBAL VARIABLE DECLARATION FOR CONTROL OF STAGES RE-DIRECTION
 void signup(){
-    char stg1[12];
-    char stg2[12];
-
-
     // int tmp=0;
     char username_checker[20], password_checker[12], confirm_password[12], file_name[20], option;
     struct user acc;
-    FILE *f1;
+    FILE *f1, *lb;
 
     do{
         printf("SIGN UP\n\n\n");
@@ -90,22 +88,21 @@ void signup(){
         scanf("%s", &confirm_password);
         printf("\nRepeat preferred password:\t");
         scanf("%s", &password_checker);
-        printf("STAGE;");
-        scanf("%s", stg2);
         strcpy(file_name, username_checker);
         if(!strcmp(password_checker, confirm_password)){
             strcpy(acc.password,confirm_password);
-            strcpy(acc.stage,stg2);
+            acc.stage = stg1;
             //strcpy(acc.username,file_name);
             //acc.stage[12] = stg2;
             f1 = fopen(strcat(file_name,".dat"),"w");
-            fprintf(f1,"%s\n%i\n", acc.password, acc.stage); //WRITE TO NG STRING SA FILE HEHE 
+            fprintf(f1,"%s\n%i\n", acc.password, &acc.stage); //WRITE TO NG STRING SA FILE HEHE 
             //fwrite(&acc,sizeof(struct user),1,f1);    // PANG WRITE  LANG NG BINARY CANCEL MUNA  
             printf("\nSIGN UP SUCCESS\nPRESS ANY KEY TO CONTINUE");
             fclose(f1);
-            f1 = fopen("leaderboards.txt","a");
-            fprintf(f1, "%s\t%i\n",acc.username,acc.stage);
-            fclose(f1);
+            lb = fopen("leaderb.txt","a");
+            strcpy(acc.username,username_checker);
+            fprintf(lb, "%s\t%i\n",acc.username, acc.stage);
+            fclose(lb);
             getch();
             option = 00;
             system("cls");
@@ -145,7 +142,7 @@ void login(){
         main();
     }
     else{
-        while(fscanf(f1,"%s", account.password)!=EOF){
+        while(fscanf(f1,"%s", account.password)){
         //(fread(&account, sizeof(struct user),1,f1)!=EOF){ //PANG READ LANG NG BINARY TO CANCEL MUNA
             if(!strcmp(account.password,password_checker)){
             fclose(f1);
@@ -219,7 +216,9 @@ void about(){
 //LEADERBOARDS// ---DISPLAY LANG MUNA GUYS, KULANG PA SA LOGIC YUNG PROGRAMMER---
 void leaderboards(){
     int i;
-    char option;
+    char option,buffer[255];
+    struct user acc;
+    FILE *f1;
     do{
     printf("LEADERBOARDS\n\n\n");
     for(i = 0; i<25; i++) printf("-");
@@ -227,7 +226,17 @@ void leaderboards(){
     printf("| NO. | USERNAME | STAGE |");
     printf("\n");
     for(i = 0; i<25; i++) printf("-");
-    printf("\n---DISPLAY LANG MUNA GUYS, KULANG PA SA LOGIC YUNG PROGRAMMER---\n");
+    f1 = fopen("leaderb.txt","r");
+    while(fread(&acc,sizeof(struct user),1,f1)){
+        //printf("\n%s",acc.username);
+        printf("\n%i",acc.stage);
+    }
+    // while(fgets(buffer,255,f1)){
+    //     printf("%s",buffer);
+    //     printf("%s\n",acc.username);
+    //     printf("%i",acc.stage);
+    // }
+    fclose(f1);
     printf("\nPress ESC to go back");
     option = getch();
     option = toupper(option);
@@ -241,46 +250,43 @@ void leaderboards(){
 
 //MATH WHIZ//
 void math_whiz(){
-    
-    char st1[12]; 
-    char st2[12];
-
-    st1[12] = 'a';
-    st2[12] = 'b';
     //char ign[20];
-    char buffer[255];
-    struct user account;
-    FILE *rf;
+    struct user acc;
+    FILE *f1;
     //account.stage=stage_1;
     //printf("%i\n", account.stage); getch(); //wag pansinin wala to. 
     //strcpy(ign,check_filename);
-    rf = fopen(check_filename,"r");
-    
-    if(rf == NULL){
+    f1 = fopen(check_filename,"r");
+    //printf("%s", check_filename);
+    if(f1 == NULL){
     printf("ERROR OPENING FILE");
-    fclose(rf);
+    fclose(f1);
     }
     else{
         //(fread(&account, sizeof(struct user),1,f1)!=EOF){
-        while(fscanf(rf,"%s", account.stage)!=EOF){
+        while(!fscanf(f1,"%i", &acc.stage)){
         //while(fgets(buffer,255,rf)!=NULL){    
             //fseek(rf, sizeof(account.username), SEEK_CUR);
-            if(!strcmp(st1,account.stage)){
-            printf("%s\n", account.stage); getch(); 
-            system("cls"); stage1(); 
+            if(acc.stage == stg1){
+            printf("STAGE : %i\n", acc.stage); getch(); 
+            system("cls"); 
+            fclose(f1); stage1(); 
+
             }
-            else if(!strcmp(st2,account.stage)){
+            else if(acc.stage == stg2){
             system("cls");
-            printf("%s\n", account.stage); stage2(); 
+            printf("STAGE : %i\n", acc.stage);
+            fclose(f1); stage2(); 
             //fclose(f1); system("cls"); stage2();
             }
             else{
-            printf("%s\n", account.stage);
+            fclose(f1);
+            printf("STAGE : %i\n", acc.stage);
             printf("ERROR"); getch(); exit(0); 
             }
         }
     }
-    fclose(rf); 
+    fclose(f1); 
 
     // if(account.stage == 3){
     //     stage3();
