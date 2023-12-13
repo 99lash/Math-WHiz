@@ -16,21 +16,13 @@ void clrscr(void){
 }
 
 int counter=0, level=1;
-char MW_OPTION, check_filename[20];
+char MW_OPTION, check_filename[20], check_pass[12];
 const int stg_1=1, stg_2=2, stg_3=3, stg_4=4, stg_5=5, stg_godMode=6; 
 
 struct user{
     char username[20], password[12];
     int stage;
 }glob_acc;
-
-//PROTOTYPE FUNCTIONS OF SYSTEM OUTLINE/GUIDELINES FLOW
-void signup();
-void login();
-void menu();
-void math_whiz();
-void about();
-void leaderboards();
 
 //Prototype Function of Stages
 void stage1();
@@ -40,6 +32,14 @@ void stage4();
 void stage5();
 void final_stage();
 
+//PROTOTYPE FUNCTIONS OF SYSTEM OUTLINE/GUIDELINES FLOW
+
+void signup();
+void login();
+void menu();
+void math_whiz();
+void about();
+void leaderboards();
 //MAIN OPTION PROMPT
 void option_prompt();
 
@@ -167,7 +167,7 @@ void signup(){
             option = 00;
             printf("\nUSERNAME ALREADY EXIST"); getch();
             fclose(fr); 
-        }
+        }clrscr();
     }while(option!=00);
     main(); 
 }//END OF SIGNUP FUNCTION//
@@ -196,14 +196,14 @@ void login(){
         //(fscanf(f1,"%s", account.password)!=EOF){
         while(fread(&glob_acc, sizeof(struct user),1,fr)!=EOF){ //READ BINARY FROM FILE
             if(!strcmp(glob_acc.password,password_checker)){
-            strcpy(glob_acc.password,password_checker);
-            fclose(fr);
-            clrscr(); menu(); break;
+                strcpy(check_pass,password_checker);
+                fclose(fr);
+                clrscr(); menu(); break;
             }
             else{
-            fclose(fr);
-            printf("\nINCORRECT PASSWORD");getch();
-            clrscr(); main(); break;
+                fclose(fr);
+                printf("\nINCORRECT PASSWORD");getch();
+                clrscr(); main(); break;
             }
         }
     }
@@ -267,8 +267,7 @@ void about(){
 //LEADERBOARDS// ---DISPLAY LANG MUNA GUYS, KULANG PA SA LOGIC YUNG PROGRAMMER---
 void leaderboards(){
     int i;
-    char option,buffer[255];
-    struct user loc_acc;
+    char option;
     FILE *fr;
     do{
         printf("LEADERBOARDS\n\n\n");
@@ -278,9 +277,9 @@ void leaderboards(){
         printf("\n");
         for(i = 0; i<25; i++) printf("-");
         fr = fopen("leaderboards.txt", "r");
-        while(fread(&loc_acc, sizeof(struct user),1,fr)){
-            printf("\n\t%s", loc_acc.username);
-            printf("\t%7i", loc_acc.stage);
+        while(fread(&glob_acc, sizeof(struct user),1,fr)){
+            printf("\n\t%s", glob_acc.username);
+            printf("\t%7i", glob_acc.stage);
         }
         fclose(fr);
         printf("\nPress ESC to go back");
@@ -384,6 +383,8 @@ void stage1(){ //ADDITION & SUBTRACTION
     struct user loc_acc;
     FILE *fw,*lb;
     char ign[20];
+    // int structIndex=1;
+    // long offset = sizeof(struct user) * structIndex;
 
     strcpy(ign,glob_acc.username);
     //strcpy(loc_acc.username,ign);
@@ -419,15 +420,36 @@ void stage1(){ //ADDITION & SUBTRACTION
         if(MW_OPTION == 00) break; 
         //PROCEED SA NEXT STAGE PAG NAGBREAK, ELSE ULIT STAGE
     }
+    // fw = fopen(check_filename, "rb+");
+    // if (fw == NULL) {
+    //     printf("Error opening file for update.\n");
+    //     return;
+    // }
+
+    // // Move the file pointer to the position where you want to update the struct
+    // fseek(fw, offset, SEEK_SET);
+
+    // // Update the stage information
+    // glob_acc.stage = stg_2;
+
+    // // Write the updated struct back to the file
+    // fwrite(&glob_acc, sizeof(struct user), 1, fw);
+
+    // // Close the file
+    // fclose(fw);
     fw = fopen(check_filename, "w");
     if(fw == NULL){ 
         printf("ERROR_FETCHING_FILES");
     }
     else{
+        strcpy(glob_acc.password,check_pass);
+        printf("\n%s",glob_acc.password); getch();
         glob_acc.stage = stg_2;
+        //fseek(fw,offset, SEEK_SET);
         fwrite(&glob_acc, sizeof(struct user),1,fw);
         fclose(fw);
     }
+
     lb = fopen("leaderboards.txt", "r");
     while(fread(&glob_acc,sizeof(struct user),1,lb)){
         if(!strcmp(glob_acc.username,ign)){ 
@@ -436,16 +458,18 @@ void stage1(){ //ADDITION & SUBTRACTION
     }
     fclose(lb);
 
-    if(found==1){
+    if(found){
         fw = fopen(check_filename,"r");
         lb = fopen("leaderboards.txt","a");
+        // fseek(fw,offset, SEEK_SET);
         while(fread(&glob_acc,sizeof(struct user),1,fw)){
+            // fseek(lb,offset, SEEK_SET);
             fwrite(&glob_acc,sizeof(struct user),1,lb);
         }
         fclose(fw);
         fclose(lb);
     }
-    else {
+    else{
         printf("\nUSER NOT FOUND");
         fclose(fw);
         fclose(lb);
