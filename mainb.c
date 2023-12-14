@@ -16,10 +16,12 @@ void clrscr(void){
 }
 
 int counter=0, level=1;
-char USERNAME[50], PASSWORD[20], MW_OPTION, check_filename[20];
-//const int stg_1=1, stg_2=2, stg_3=3, stg_4=4, stg_5=5, stg_godMode=6; 
-const char stg_1='a', stg_2='b', stg_3='c', stg_4='d', stg_5='e', stg_godMode='f'; 
-char ACCOUNT_STAGE[6];
+
+char MW_OPTION, check_filename[20], lb_username[20];
+const char stg_1='1', stg_2='2', stg_3='3', stg_4='5', stg_5='5', stg_godMode='6'; 
+
+char USERNAME[50],PASSWORD[20]; 
+char ACCOUNT_STAGE[1];
 // struct user{
 //     char username[20], password[12];
 //     int stage;
@@ -41,6 +43,26 @@ void stage2();
 // void stage4();
 // void stage5();
 // void final_stage();
+
+void updateStage(const char *username, const char *newStage, const char *filePath){
+    char BUFFER[100];
+    FILE *lb = fopen(filePath, "r+");
+    
+    if (lb == NULL) {
+        perror("Error opening file");
+        exit(0);
+    }
+    while (fgets(BUFFER, sizeof(BUFFER), lb) != NULL) {
+        if (strstr(BUFFER, username) != NULL) {
+            snprintf(BUFFER, sizeof(BUFFER), "%s %s\n", username, newStage);
+
+            fseek(lb, (-strlen(BUFFER)-1), SEEK_CUR);
+            fputs(BUFFER, lb);
+            break;
+        }
+    }
+    fclose(lb);
+}
 
 //MAIN OPTION PROMPT
 void option_prompt();
@@ -142,7 +164,7 @@ void signup(){
                 strcpy(PASSWORD,password_checker);
                 ACCOUNT_STAGE[0] = stg_1;
                 fw = fopen(file_name,"w");
-                fprintf(fw, "%s %s %s\n",USERNAME, PASSWORD, ACCOUNT_STAGE); 
+                fprintf(fw, "%s %s %s\n",USERNAME,PASSWORD, ACCOUNT_STAGE); 
                 fclose(fw);
                 //-----------------------------------
                 lb = fopen("lb.txt","a");
@@ -177,7 +199,7 @@ void login(){
 
     printf("LOG IN\n\n\n");
     printf("\nEnter username:\t");
-    scanf("%s", &username_checker);
+    scanf("%s", username_checker);
     printf("\nEnter password:\t");
     hide_input(password_checker);
     //scanf("%s", &password_checker);
@@ -194,7 +216,8 @@ void login(){
         //(fscanf(f1,"%s", account.password)!=EOF){
         while(fscanf(fr, "%s %s %s\n", USERNAME, PASSWORD, ACCOUNT_STAGE)!=EOF){ //READ BINARY FROM FILE
             if(!strcmp(PASSWORD,password_checker)){
-                printf("\nUSERNAME : %s", USERNAME);
+                strcpy(lb_username,username_checker);
+                printf("\nUSERNAME : %s", USERNAME); 
                 printf("\nPASSWORD : %s", PASSWORD);
                 printf("\nSTAGE : %s", ACCOUNT_STAGE);
                 
@@ -282,9 +305,8 @@ void leaderboards(){
         printf("\n");
         for(i = 0; i<25; i++) printf("-");
         fr = fopen("lb.txt", "r");
-        while(fscanf(fr,"%s %s",USERNAME,ACCOUNT_STAGE)!=EOF){
-            printf("\n\t%7s", USERNAME);
-            printf("\t%s", ACCOUNT_STAGE);
+        while(fscanf(fr,"%s %s",&USERNAME,&ACCOUNT_STAGE)!=EOF){
+            printf("\t\n%s\t%s", USERNAME,ACCOUNT_STAGE);
             // printf("\t%7s", ACCOUNT_STAGE);
         }
         // while(fread(&glob_acc, sizeof(struct user),1,fr)){
@@ -312,29 +334,29 @@ void math_whiz(){
     }
     else{
         //while(fread(&loc_acc, sizeof(struct user),1,fr)){
-        while(fscanf(fr,"%s %s\n", &USERNAME, &ACCOUNT_STAGE)==1){
+        while(fscanf(fr,"%s %i\n", USERNAME, ACCOUNT_STAGE)==1){
             if(ACCOUNT_STAGE[0] == stg_1){
                 //printf("%i\n", loc_acc.stage); getch(); 
                 clrscr(); stage1(); break;
             }
-            else if(ACCOUNT_STAGE[1] == stg_2){
+            else if(ACCOUNT_STAGE[0] == stg_2){
                 //printf("%i\n", loc_acc.stage); getch(); 
                 clrscr(); stage2(); break;
             }
-            else if(ACCOUNT_STAGE[2] == stg_3){
+            else if(ACCOUNT_STAGE[0] == stg_3){
                 //printf("%i\n", loc_acc.stage); getch(); 
                 clrscr(); //stage3(); break;
             }
-            else if(ACCOUNT_STAGE[3] == stg_4){
+            else if(ACCOUNT_STAGE[0] == stg_4){
                 //printf("%i\n", loc_acc.stage); getch(); 
                 clrscr(); //stage4(); break;
             }
-            else if(ACCOUNT_STAGE[4] == stg_5){
+            else if(ACCOUNT_STAGE[0] == stg_5){
                 //printf("%i\n", loc_acc.stage); getch(); 
                 clrscr(); // stage5(); break;
 
             }
-            else if(ACCOUNT_STAGE[5] == stg_godMode){ 
+            else if(ACCOUNT_STAGE[0] == stg_godMode){ 
                 clrscr(); //final_stage(); break;
             }
             else{
@@ -392,10 +414,10 @@ void stage1(){ //ADDITION & SUBTRACTION
     int n1, n2, sys_ans, user_ans,found=0;
     FILE *fw,*lb;
     char ign[20];
-    int structIndex=1;
-    long offset = sizeof(ACCOUNT_STAGE) * structIndex;
+    // int structIndex=1;
+    // long offset = sizeof(ACCOUNT_STAGE) * structIndex;
 
-    //strcpy(ign,USERNAME);
+    strcpy(ign,lb_username);
     //strcpy(loc_acc.username,ign);
     
     srand(time(NULL));
@@ -430,23 +452,19 @@ void stage1(){ //ADDITION & SUBTRACTION
         if(MW_OPTION == 00) break; 
         //PROCEED SA NEXT STAGE PAG NAGBREAK, ELSE ULIT STAGE
     }
-    fw = fopen(check_filename, "rb+");
+    fw = fopen(check_filename, "r+");
     if (fw == NULL) {
-        printf("Error opening file for update.\n");
+        printf("Error updating file.\n");
         return;
     }
+    else{
+        ACCOUNT_STAGE[0] = stg_2;
+        fseek(fw, -3, SEEK_END);
+        fprintf(fw,"%s", ACCOUNT_STAGE);
+        fclose(fw);
+    }
+    updateStage(USERNAME,ACCOUNT_STAGE,"lb.txt");
 
-    // Move the file pointer to the position where you want to update the struct
-    fseek(fw, offset, SEEK_SET);
-
-    // Update the stage information
-    ACCOUNT_STAGE[1] = stg_2;
-
-    // Write the updated struct back to the file
-    fprintf(fw,"%i", ACCOUNT_STAGE);
-
-    // Close the file
-    fclose(fw);
     // fw = fopen(check_filename, "w");
     // if(fw == NULL){ 
     //     printf("ERROR_FETCHING_FILES");
@@ -458,29 +476,33 @@ void stage1(){ //ADDITION & SUBTRACTION
     //     fclose(fw);
     // }
 
-    // lb = fopen("leaderboards.txt", "r");
-    // while(fread(&glob_acc,sizeof(struct user),1,lb)){
-    //     if(!strcmp(glob_acc.username,ign)){ 
+    // lb = fopen("lb.txt", "r");
+    // while(fscanf(lb, "%s %s",&USERNAME,&ACCOUNT_STAGE)!=EOF){
+    //     printf("%s\t", USERNAME);
+    //     printf("%s\n", ACCOUNT_STAGE);
+    //     if(!strcmp(USERNAME,lb_username)){ 
     //     found=1;
     //     }
+    //     getch();
     // }
     // fclose(lb);
 
     // if(found){
-    //     fw = fopen(check_filename,"r");
-    //     lb = fopen("leaderboards.txt","w");
-    //     fseek(fw,offset, SEEK_SET);
-    //     while(fread(&glob_acc,sizeof(struct user),1,fw)){
-    //         fseek(lb,offset, SEEK_SET);
-    //         fwrite(&glob_acc,sizeof(struct user),1,lb);
-    //     }
-    //     fclose(fw);
-    //     fclose(lb);
+    //     printf("\nUSER FOUND"); getch();
+        // fw = fopen(check_filename,"r");
+        // lb = fopen("leaderboards.txt","w");
+        // fseek(fw,offset, SEEK_SET);
+        // while(fread(&glob_acc,sizeof(struct user),1,fw)){
+        //     fseek(lb,offset, SEEK_SET);
+        //     fwrite(&glob_acc,sizeof(struct user),1,lb);
+        // }
+        // fclose(fw);
+        // fclose(lb);
     // }
     // else{
-    //     printf("\nUSER NOT FOUND");
-    //     fclose(fw);
-    //     fclose(lb);
+    //     printf("\nUSER NOT FOUND"); getch();
+        // fclose(fw);
+        // fclose(lb);
     // }
 stage2();
 }
@@ -514,7 +536,7 @@ void stage2(){ //MULTIPLICATION
         printf("ERROR_FETCHING_FILES");
     }
     else{
-        ACCOUNT_STAGE[2] = stg_3;
+        ACCOUNT_STAGE[0]= stg_3;
         fprintf(fw, "\n%i", ACCOUNT_STAGE);
         //fwrite(&glob_acc, sizeof(struct user),1,fw);
         fclose(fw);
@@ -672,5 +694,5 @@ void stage2(){ //MULTIPLICATION
 //         //PROCEED SA NEXT STAGE PAG NAGBREAK, ELSE ULIT STAGE
 //     }
 //     printf("\n\nCONGRATULATIONS!\n MATH WHIZ TEAM ARE GLAD FOR YOU TO MADE IT HERE.\n");
-//     printf("You are now a certified \"MATH WHIZ\"");
+//     printf("You are now a certified \"MATH WHIZer\"");
 // }
