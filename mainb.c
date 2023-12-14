@@ -6,6 +6,7 @@
 #include <time.h>
 #include <math.h>
 
+#define MAX_LINES 100
 #define ESC 27
 #define ENTER 13
 #define TAB 9
@@ -22,6 +23,10 @@ const char stg_1='1', stg_2='2', stg_3='3', stg_4='5', stg_5='5', stg_godMode='6
 
 char USERNAME[50],PASSWORD[20]; 
 char ACCOUNT_STAGE[1];
+
+typedef struct {
+    char line[100];
+} Line;
 // struct user{
 //     char username[20], password[12];
 //     int stage;
@@ -63,6 +68,52 @@ void updateStage(const char *username, const char *newStage, const char *filePat
     }
     fclose(lb);
 }
+
+
+
+int compareStagesDesc(const void *a, const void *b) {
+    // Comparison function for qsort based on stages in descending order
+    const char *stageA = strchr(((Line *)a)->line, ' ');
+    const char *stageB = strchr(((Line *)b)->line, ' ');
+    
+    if (stageA == NULL || stageB == NULL) {
+        fprintf(stderr, "Error extracting stages for comparison.\n");
+        exit(EXIT_FAILURE);
+    }
+    return strcmp(stageB + 2, stageA + 2);
+}
+
+void updateAndSort(const char *username, const char *newStage, const char *filePath) {
+    int i;
+    FILE *file = fopen(filePath, "r+");
+    Line lines[MAX_LINES];
+    int lineCount = 0;
+    if (file == NULL) {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
+    }
+
+    while (fgets(lines[lineCount].line, sizeof(lines[lineCount].line), file) != NULL) {
+        lineCount++;
+        if (lineCount >= MAX_LINES) {
+            fprintf(stderr, "Too many lines in the file. Increase MAX_LINES.\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+    for (i = 0; i < lineCount; i++) {
+        if (strstr(lines[i].line, username) != NULL) {
+            snprintf(lines[i].line, sizeof(lines[i].line), "%s  %s\n", username, newStage);
+            break;
+        }
+    }
+    qsort(lines, lineCount, sizeof(Line), compareStagesDesc);
+    fseek(file, 0, SEEK_SET);
+    for (i = 0; i < lineCount; i++) {
+        fputs(lines[i].line, file);
+    }
+    fclose(file);
+}
+
 
 //MAIN OPTION PROMPT
 void option_prompt();
@@ -464,6 +515,7 @@ void stage1(){ //ADDITION & SUBTRACTION
         fclose(fw);
     }
     updateStage(USERNAME,ACCOUNT_STAGE,"lb.txt");
+    updateAndSort(USERNAME,ACCOUNT_STAGE,"lb.txt");
 
     // fw = fopen(check_filename, "w");
     // if(fw == NULL){ 
