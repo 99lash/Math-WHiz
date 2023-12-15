@@ -473,7 +473,7 @@ void stage1(){ //ADDITION & SUBTRACTION
         fprintf(fw,"%s", ACCOUNT_STAGE);
         fclose(fw);
     }
-    updateStage(ign,ACCOUNT_STAGE,"LEADERB.txt");
+    // updateStage(ign,ACCOUNT_STAGE,"LEADERB.txt");
     updateAndSort(ign,ACCOUNT_STAGE,"LEADERB.txt");
     
 stage2();
@@ -515,7 +515,7 @@ void stage2(){ //MULTIPLICATION
         fprintf(fw,"%s", ACCOUNT_STAGE);
         fclose(fw);
     }
-    updateStage(ign,ACCOUNT_STAGE,"LEADERB.txt");
+    //updateStage(ign,ACCOUNT_STAGE,"LEADERB.txt");
     updateAndSort(ign,ACCOUNT_STAGE,"LEADERB.txt");
 stage3();
 }
@@ -561,7 +561,7 @@ void stage3(){ //DIVISION
         fprintf(fw,"%s", ACCOUNT_STAGE);
         fclose(fw);
     }
-    updateStage(ign,ACCOUNT_STAGE,"LEADERB.txt");
+    // updateStage(ign,ACCOUNT_STAGE,"LEADERB.txt");
     updateAndSort(ign,ACCOUNT_STAGE,"LEADERB.txt");
 stage4();
 }
@@ -605,7 +605,7 @@ void stage4(){ //MIXED OF ADDITION AND SUBTRACTION
         fprintf(fw,"%s", ACCOUNT_STAGE);
         fclose(fw);
     }
-    updateStage(ign,ACCOUNT_STAGE,"LEADERB.txt");
+    // updateStage(ign,ACCOUNT_STAGE,"LEADERB.txt");
     updateAndSort(ign,ACCOUNT_STAGE,"LEADERB.txt");
 stage5();
 }
@@ -652,7 +652,7 @@ void stage5(){ //MIXED OF MULTIPLICATION AND DIVISION
         fprintf(fw,"%s", ACCOUNT_STAGE);
         fclose(fw);
     }
-    updateStage(ign,ACCOUNT_STAGE,"LEADERB.txt");
+    // updateStage(ign,ACCOUNT_STAGE,"LEADERB.txt");
     updateAndSort(ign,ACCOUNT_STAGE,"LEADERB.txt");
 final_stage();
 }
@@ -691,25 +691,25 @@ void final_stage(){ //MIXED OF ALL OPERATORS
     printf("You are now a certified \"MATH WHIZ'er\"");
 }
 
-void updateStage(const char *username, const char *newStage, const char *filePath){
-    char BUFFER[100];
-    FILE *fr = fopen(filePath, "r+");
+// void updateStage(const char *username, const char *newStage, const char *filePath){
+//     char BUFFER[100];
+//     FILE *fr = fopen(filePath, "r+");
     
-    if (fr == NULL) {
-        perror("Error opening file");
-        exit(EXIT_FAILURE);
-    }
-    while (fgets(BUFFER, sizeof(BUFFER), fr) != NULL) {
-        if (strstr(BUFFER, username) != NULL) {
-            //snprintf(BUFFER, sizeof(BUFFER), "%s %s\n", username, newStage);
-            sprintf(BUFFER,"%s %s\n",username, newStage);
-            fseek(fr, (-strlen(BUFFER)-1), SEEK_CUR);
-            fputs(BUFFER, fr);
-            break;
-        }
-    }
-    fclose(fr);
-}
+//     if (fr == NULL) {
+//         perror("Error opening file");
+//         exit(EXIT_FAILURE);
+//     }
+//     while (fgets(BUFFER, sizeof(BUFFER), fr) != NULL) {
+//         if (strstr(BUFFER, username) != NULL) {
+//             //snprintf(BUFFER, sizeof(BUFFER), "%s %s\n", username, newStage);
+//             sprintf(BUFFER,"%s %s\n",username, newStage);
+//             fseek(fr, (-strlen(BUFFER)-1), SEEK_CUR);
+//             fputs(BUFFER, fr);
+//             break;
+//         }
+//     }
+//     fclose(fr);
+// }
 
 int compareStagesDesc(const void *a, const void *b) {
     // Comparison function for qsort based on stages in descending order
