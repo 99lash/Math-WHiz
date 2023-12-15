@@ -58,39 +58,37 @@ float mult_div(float n1, float n2, float n3) { return n1 * n2 / n3; }
 float all_op(float n1, float n2, float n3, float n4, float n5) {return n1 * n2 / n3 + n4 - n5;}
 
 //Function for auto ROUND OFF
-float ROUND(float num) {
-    return (num >= 0) ? (int)(num + 0.5) : (int)(num - 0.5);
+float DO_ROUND(float num) {
+     if(num>=0) return (int)(num + 0.5); else return (int)(num - 0.5);
 }
-
-// float ROUND(float num) {
-//     if(num>=0) return (int)(num + 0.5); else return (int)(num - 0.5);
-// }
 
 //Function for Round OFF
 float round_off(float value, int decimal_places)
 {
   float rounded;
   float shift = pow(10, decimal_places);
-  rounded = value * shift; rounded = ROUND(rounded); rounded = rounded / shift;
+  rounded = value * shift;
+  rounded = DO_ROUND(rounded);
+  rounded = rounded / shift;
 return rounded;
 }
 
 //Correct or Wrong Identifier
 void identifier(int a, int b){//for int
     if(a == b){
-    printf("CORRECT!!!"); //COLOR GREEN
+    textcolor(GREEN); cprintf("CORRECT!!!"); textcolor(WHITE);
     }
     else if(a != b){
-    printf("INCORRECT!!!"); //COLOR RED
+    textcolor(RED); cprintf("INCORRECT!!!"); textcolor(WHITE);
     counter++;
     }
 }
 void fIdentifier(float a, float b, float c){// for point decimals, [FLOAT]
     if(a == b || a == c){
-    printf("CORRECT!!!"); //COLOR GREEN
+    textcolor(GREEN); cprintf("CORRECT!!!"); textcolor(WHITE);
     }
     else if(a != b || a != c){
-    printf("INCORRECT!!!"); //COLOR RED
+    textcolor(RED); cprintf("INCORRECT!!!"); textcolor(WHITE);
     counter++;
     }
 }
@@ -120,19 +118,38 @@ while(1){
 }
 
 int main(){
+    int i;
     char option;
     clrscr();
     //dashboard//
     do{ //ASCII CODE [1] is 49, [2] is 50, [3] is 51//
-    printf("MATH WHIZ\n\n\n");
-    printf("[1] LOG IN\n[2] SIGN UP\n");
-    printf("\n\n\nPRESS ESC TO EXIT\n");
+    gotoxy(58,24);
+    textcolor(184);
+    cprintf("\xdb MADE BY COLMO & MANIT");
+    gotoxy(2,4);
+    for(i=1;i<40;i++) printf("\x4 ");
+    textcolor(21);
+    gotoxy(21,5);
+    cprintf("\x4 \xB1 \xB1 \xB1 \xB1 \xB1 \xB1 \xB1 MATH WHIZ \xB1 \xB1 \xB1 \xB1 \xB1 \xB1 \xB1 \xB1 \x4\n");
+    gotoxy(2,6);
+    for(i=1;i<40;i++) printf("\x4 ");
+    gotoxy(33,12);
+    textcolor(YELLOW);
+    cprintf("\x9 [1] LOG IN   \x10");
+    gotoxy(33,13);
+    textcolor(GREEN);
+    cprintf("\x9 [2] SIGN UP  \x10");
+    gotoxy(28,20);
+    textcolor(WHITE);
+    cprintf("\xae \x9 PRESS ESC TO EXIT \x9 \xaf");
+    gotoxy(30,22);
+    textcolor(WHITE);
     option = getch();
 	switch(option){
 	    case '1' : login();  break;
 	    case '2' : signup(); break;
 	    case ESC : clrscr(); break;
-	    default  : printf("\nINVALID KEY SELECTION\n"); getch();
+	    default  : cprintf("INVALID KEY SELECTION"); getch();
 	    clrscr(); break;
 	}
     }while(option != '1' && option != '2' && option != ESC);
@@ -147,15 +164,17 @@ void signup(){
     clrscr();
 
     do{
-	printf("SIGN UP\n\n\n");
-	printf("\nEnter preferred username:\t");
+	gotoxy(18,7);
+	printf("SIGN UP");
+	gotoxy(18,11);
+	printf("Enter preferred username:  ");
 	scanf("%s", username_checker);
-	printf("\nEnter preferred password:\t");
+	gotoxy(18,12);
+	printf("Enter preferred password:  ");
 	hide_input(password_checker);
-	//scanf("%s", &password_checker);
-	printf("\nRepeat preferred password:\t");
+	gotoxy(18,13);
+	printf("Repeat preferred password: ");
 	hide_input(confirm_password);
-	//scanf("%s", &confirm_password);
 	strcpy(file_name, username_checker);
 	fr = fopen(strcat(file_name,".dat"),"r");
 	//printf("\n%s",check_filename);getch();
@@ -163,27 +182,36 @@ void signup(){
 	    if(!strcmp(password_checker, confirm_password)){
 		fclose(fr);
 		ACCOUNT_STAGE[0] = stg_1;
-		printf("\nPASS : %s", password_checker);
-		printf("\nSTAGE : %s",ACCOUNT_STAGE);
 		strcpy(USERNAME,username_checker);
 		strcpy(PASSWORD,password_checker);
-		printf("\n%s\n%s\n%s", USERNAME,PASSWORD,ACCOUNT_STAGE);
-		getch();
 		fw = fopen(file_name,"w");
-		//strcpy(PASSWORD,password_checker);
 		fprintf(fw, "%s %s %c\n",USERNAME,PASSWORD,ACCOUNT_STAGE[0]);
 		fclose(fw);
 		//-----------------------------------
 		lb = fopen("LEADERB.txt","a");
 		fprintf(lb, "%s  %c\n",USERNAME,ACCOUNT_STAGE[0]);
 		fclose(lb);
-		//*newSTG = ACCOUNT_STAGE[0];
-		printf("\nSIGN UP SUCCESS\nPRESS ANY KEY TO CONTINUE");
+		gotoxy(18,15);
+		textcolor(LIGHTGREEN);
+		cprintf("SIGN UP SUCCESS");
+		gotoxy(25,20);
+		textcolor(14);
+		cprintf("PRESS ANY KEY TO CONTINUE");
+		textcolor(WHITE);
 		option = 00; getch(); clrscr(); login();
 	    }
 	    else{//ascii code of [ESC] is 27
 		while(option!=ESC){
-		    printf("\nPASSWORD DOES NOT MATCH\n\nPress any key to sign up again.\nPress ESC to go back to dashboard\n");
+		    gotoxy(18,16);
+		    textcolor(RED);
+		    cprintf("PASSWORD DOES NOT MATCH");
+		    gotoxy(25,20);
+		    textcolor(14);
+		    cprintf("Press any key to sign up again");
+		    gotoxy(23,21);
+		    textcolor(14);
+		    cprintf("Press ESC to go back to dashboard");
+		    textcolor(WHITE);
 		    option = getch();
 		    if(option == ESC) option = 00;
 		    break;
@@ -192,7 +220,10 @@ void signup(){
 	}
 	else{
 	    option = 00;
-	    printf("\nUSERNAME ALREADY EXIST"); getch();
+	    gotoxy(18,16);
+	    textcolor(RED);
+	    cprintf("USERNAME ALREADY EXIST"); getch();
+	    textcolor(WHITE);
 	    fclose(fr);
 	}clrscr();
     }while(option!=00);
@@ -205,10 +236,13 @@ void login(){
     FILE *fr;
     clrscr();
 
-    printf("LOG IN\n\n\n");
-    printf("\nEnter username:\t");
+    gotoxy(18,7);
+    printf("LOG IN");
+    gotoxy(18,11);
+    printf("Enter username:  ");
     scanf("%s", username_checker);
-    printf("\nEnter password:\t");
+    gotoxy(18,12);
+    printf("Enter password:  ");
     hide_input(password_checker);
     //scanf("%s", &password_checker);
     strcpy(check_filename,username_checker); //check_filename ay global variable
@@ -216,7 +250,10 @@ void login(){
     fr = fopen(strcat(check_filename,".dat"),"r");
     if(fr == NULL){
 	fclose(fr);
-	printf("\nUSER DOES NOT EXIST"); getch();
+	gotoxy(18,14);
+	textcolor(LIGHTRED);
+	cprintf("USER DOES NOT EXIST"); getch();
+	textcolor(WHITE);
 	clrscr();
 	main();
     }
@@ -225,11 +262,9 @@ void login(){
 	while(fscanf(fr, "%s %s %c\n",USERNAME,PASSWORD,ACCOUNT_STAGE)!=EOF){ //READ BINARY FROM FILE
 	    if(!strcmp(PASSWORD,password_checker)){
 		strcpy(lb_username,username_checker);
-		printf("\nUSERNAME : %s", USERNAME);
-		printf("\nPASSWORD : %s", PASSWORD);
-		printf("\nSTAGE : %c", ACCOUNT_STAGE[0]);
-
-		getch();
+		//printf("\nUSERNAME : %s", USERNAME);
+		//printf("\nPASSWORD : %s", PASSWORD);
+		//printf("\nSTAGE : %c", ACCOUNT_STAGE[0]);
 		fclose(fr);
 		clrscr(); menu(); break;
 	    }
@@ -238,7 +273,10 @@ void login(){
 		// printf("\nUSERNAME : %s", USERNAME);
 		// printf("\nPASSWORD : %s", PASSWORD);
 		// printf("\nPASSWORD : %s", ACCOUNT_STAGE);
-		printf("\nINCORRECT PASSWORD");getch();
+		gotoxy(18,14);
+		textcolor(LIGHTRED);
+		cprintf("INCORRECT PASSWORD");getch();
+		textcolor(WHITE);
 		clrscr(); main(); break;
 	    }
 	}
@@ -247,12 +285,19 @@ void login(){
 
 //MENU FUNCTION//
 void menu(){
+    int i;
     char option;
 
     while(option!='P' && option!='L' && option!='A' && option!= ESC){
-	printf("MATH WHIZ\n\n\n");
-	printf("[P] START\n[L] LEADERBOARDS\n[A] ABOUT");
-	printf("\n\n\nPress ESC to EXIT & LOG OUT\t");
+	gotoxy(2,4); for(i=1;i<40;i++) printf("\x4 ");
+	textcolor(21); gotoxy(21,5);
+	cprintf("\x4 \xB1 \xB1 \xB1 \xB1 \xB1 \xB1 \xB1 MATH WHIZ \xB1 \xB1 \xB1 \xB1 \xB1 \xB1 \xB1 \xB1 \x4\n");
+	gotoxy(2,6); for(i=1;i<40;i++) printf("\x4 ");
+	gotoxy(32,10); textcolor(LIGHTGREEN); cprintf("[P] START");
+	gotoxy(32,11); textcolor(GREEN); cprintf("[L] LEADERBOARDS");
+	gotoxy(32,12); textcolor(7); cprintf("[A] ABOUT");
+	gotoxy(27,20); textcolor(WHITE); cprintf("\xae \x9 Press ESC to go back \x9 \xaf");
+	gotoxy(31,22); textcolor(WHITE);
 	option = getch();
 	option = toupper(option);
 	switch(option){
@@ -272,7 +317,7 @@ void menu(){
 	    case ESC : //ascii code of [ESC] is 27//
 	    clrscr(); exit(0);
 
-	    default: clrscr();
+	    default: printf("INVALID KEY SELECTION"); getch(); clrscr();
 	}
     }
 
@@ -282,17 +327,24 @@ void about(){
     char option, BUFFER_FCONTENT[256];
     FILE *fr;
 
-    int MAX_BUFFER_LINE = sizeof(BUFFER_FCONTENT);
+    //int MAX_BUFFER_LINE = sizeof(BUFFER_FCONTENT);
     //printf("SIZE %d", MAX_BUFFER_LINE); getch(); THIS LINE AY ONLY FOR CHECKING OF BUFFER VALUE IN BYTES
     do{
-	fr = fopen("about1.txt", "r");
+	/*fr = fopen("about1.txt", "r");
 	if(fr == NULL) printf("ERROR_FILE_MISSING");
 	else{
 	    while(fgets(BUFFER_FCONTENT,MAX_BUFFER_LINE,fr)!=NULL)
 	    printf("%s", BUFFER_FCONTENT);
 	}
 	fclose(fr);
-	printf("Press ESC to go back");
+	*/
+	gotoxy(58,24);textcolor(184); cprintf("\xdb MADE BY COLMO & MANIT");
+	gotoxy(32,3); textcolor(YELLOW); cprintf("\x4 ABOUT MATH WHIZ \x4");
+	gotoxy(5,6);
+	printf("Math Whiz is not only a game; it's a challenging adventure through solving and overcome every stages and levels without having an incorrect answers.");
+	gotoxy(74,7);
+	printf("That puts your intuition and critical thinking to the test. This simple solving game promises a delish user interface and user experience.");
+	gotoxy(28,20); textcolor(WHITE); cprintf("\xae \x9 Press ESC to go back \x9 \xaf");
 	option = getch();
 	option = toupper(option);
 	clrscr();
@@ -300,26 +352,28 @@ void about(){
     clrscr();
     menu();
 }
-//LEADERBOARDS// ---DISPLAY LANG MUNA GUYS, KULANG PA SA LOGIC YUNG PROGRAMMER---
+//LEADERBOARDS// di maka handle ng long usernames na pwede maglead sa unresponsiveness
 void leaderboards(){
     int i, lineLB=0;
-    char option;
+    char option, tmp = ' ';
     FILE *fr;
     do{
-	printf("LEADERBOARDS\n\n\n");
-	for(i = 0; i<25; i++) printf("-");
-	printf("\n");
-	printf("| NO. | USERNAME | STAGE |");
-	printf("\n");
-	for(i = 0; i<25; i++) printf("-");
+	gotoxy(32,3); textcolor(GREEN); cprintf("\xB2\xB2\xB2 LEADERBOARDS \xB2\xB2\xB2");
+	gotoxy(2,5); for(i = 0; i<75; i++) printf("=");
+	gotoxy(2,6); printf("\xdd NO. \xdd  USERNAME %39c \xdd %4cSTAGE \%4c\xdd",tmp,tmp,tmp);
+	gotoxy(2,7); for(i = 0; i<75; i++) printf("=");
 	fr = fopen("LEADERB.txt", "r");
 	while(fscanf(fr,"%s  %c\n",USERNAME,ACCOUNT_STAGE)!=EOF){
 	    lineLB++;
-	    printf("\n%i%12s%10c",lineLB,USERNAME,ACCOUNT_STAGE[0]);
-	    // printf("\t%7s", ACCOUNT_STAGE);
+	    printf("\n  %2i.",lineLB);
+	    textcolor(LIGHTGREEN);cprintf("  %10s",USERNAME);
+	    textcolor(YELLOW);cprintf("%52c",ACCOUNT_STAGE[0]);
+	    printf("\n ---------------------------------------------------------------------------");
+	    textcolor(WHITE);
 	}
+	lineLB=0;
 	fclose(fr);
-	printf("\nPress ESC to go back");
+	gotoxy(28,23); textcolor(WHITE); cprintf("\xae \x9 Press ESC to go back \x9 \xaf");
 	option = getch();
 	option = toupper(option);
 	clrscr();
@@ -354,7 +408,6 @@ void math_whiz(){
 	    }
 	    else if(ACCOUNT_STAGE[0] == stg_5){
 		fclose(fr); clrscr(); stage5(); break;
-
 	    }
 	    else if(ACCOUNT_STAGE[0] == stg_godMode){
 		fclose(fr); clrscr(); final_stage(); break;
@@ -362,18 +415,18 @@ void math_whiz(){
 	    else{
 		fclose(fr);
 		printf("ERROR ON ALLOCATING OF LOADED PROGRESS");
-		getch(); exit(0);
+		getch(); exit(1);
 	    }
 	}
     }
 }//END OF MATH WHIZ//
 
 void option_prompt(){
-    printf("\n\nYOU HAVE %i INCORRECT ANSWERS", counter);
+    gotoxy(35,10);textcolor(YELLOW);cprintf("\x10 YOU HAVE %i INCORRECT ANSWERS", counter);
     if(counter > 0){
-    printf("\n\n--Press any key to TRY AGAIN.");
-    printf("\n--Press [B] to go back to MENU.");
-    printf("\n--Press ESC to EXIT & LOG OUT.");
+    gotoxy(35,12);textcolor(LIGHTRED);cprintf("\x9 Press any key to TRY AGAIN.");
+    gotoxy(35,13);textcolor(7);cprintf("\x9 Press [B] to go back to MENU.");
+    gotoxy(35,14);textcolor(WHITE);cprintf("\x9 Press ESC to EXIT & LOG OUT.");
     MW_OPTION = getch();
     MW_OPTION = toupper(MW_OPTION);
 	switch (MW_OPTION){
@@ -390,9 +443,9 @@ void option_prompt(){
 	}
     }
     else{
-    printf("--Press any key to NEXT STAGE.");
-    printf("--Press [B] to go back to MENU.");
-    printf("--Press ESC to EXIT & LOG OUT.");
+    gotoxy(35,12);textcolor(LIGHTRED);cprintf("\x9 Press any key to TRY AGAIN.");
+    gotoxy(35,13);textcolor(7);cprintf("\x9 Press [B] to go back to MENU.");
+    gotoxy(35,14);textcolor(WHITE);cprintf("\x9 Press ESC to EXIT & LOG OUT.");
     MW_OPTION = getch();
     MW_OPTION = toupper(MW_OPTION);
 	switch(MW_OPTION){
@@ -424,7 +477,7 @@ void stage1(){ //ADDITION & SUBTRACTION
     //printf("\n%s", loc_acc.username);
     //printf("\n%s", ign);
     while(MW_OPTION != ESC && MW_OPTION != 'B'){
-	printf("STAGE %c\n",ACCOUNT_STAGE[0]);
+	gotoxy(33,2);printf("\x11 STAGE %c \x10",ACCOUNT_STAGE[0]);
 	do{
 	    n1 = (rand() % 25) + 1;
 	    n2 = (rand() % 25) + 1;
@@ -477,7 +530,7 @@ void stage2(){ //MULTIPLICATION
     srand(time(NULL));
     //printf("%s", check_filename);
     while(MW_OPTION != ESC && MW_OPTION != 'B'){
-	printf("STAGE %c\n",ACCOUNT_STAGE[0]);
+	gotoxy(33,2);printf("\x11 STAGE %c \x10",ACCOUNT_STAGE[0]);
 	do{
 	    n1 = (rand() % 10) + 1;
 	    n2 = (rand() % 10) + 1;
@@ -520,7 +573,7 @@ void stage3(){ //DIVISION
     srand(time(NULL));
     //printf("%s", check_filename);
     while(MW_OPTION != ESC && MW_OPTION != 'B'){
-	printf("STAGE %c\n",ACCOUNT_STAGE[0]);
+	gotoxy(33,2);printf("\x11 STAGE %c \x10",ACCOUNT_STAGE[0]);
 	do{
 	    n1 = (rand() % 10) + 1;
 	    n2 = (rand() % 10) + 1;
@@ -568,7 +621,7 @@ void stage4(){ //MIXED OF ADDITION AND SUBTRACTION
     srand(time(NULL));
     //printf("%s", check_filename);
     while(MW_OPTION != ESC && MW_OPTION != 'B'){
-	printf("STAGE %c\n",ACCOUNT_STAGE[0]);
+	gotoxy(33,2);printf("\x11 STAGE %c \x10",ACCOUNT_STAGE[0]);
 	do{
 	    n1 = (rand() % 10) + 1;
 	    n2 = (rand() % 10) + 1;
@@ -614,7 +667,7 @@ void stage5(){ //MIXED OF MULTIPLICATION AND DIVISION
     srand(time(NULL));
     //printf("%s", check_filename);
     while(MW_OPTION != ESC && MW_OPTION != 'B'){
-	printf("STAGE %c\n",ACCOUNT_STAGE[0]);
+	gotoxy(33,2);printf("\x11 STAGE %c \x10",ACCOUNT_STAGE[0]);
 	do{
 	    n1 = (rand() % 10) + 1;
 	    n2 = (rand() % 10) + 1;
@@ -659,7 +712,7 @@ void final_stage(){ //MIXED OF ALL OPERATORS
     srand(time(NULL));
     //printf("%s", check_filename);
     while(MW_OPTION != ESC && MW_OPTION != 'B'){
-	printf("FINAL STAGE\n");
+	gotoxy(33,2);printf("\x11 FINAL STAGE \x10");
 	do{
 	    n1 = (rand() % 10) + 1;
 	    n2 = (rand() % 10) + 1;
@@ -711,7 +764,7 @@ void updateAndSort(const char *username, const char *newStage, const char *fileP
     while (fgets(lines[lineCount].line, sizeof(lines[lineCount].line), fr) != NULL) {
 	lineCount++;
 	if (lineCount >= MAX_LINES) {
-	    fprintf(stderr, "Too many lines in the file. Increase MAX_LINES.\n");
+	    fprintf(stderr, "Too many lines in the file.");
 	    exit(EXIT_FAILURE);
 	}
     }
@@ -729,7 +782,6 @@ void updateAndSort(const char *username, const char *newStage, const char *fileP
     }
     fclose(fr);
 }
-
 // void updateStage(const char *username,const char newStage[1], const char *filePath){
 //     char BUFFER[100];
 //     FILE *fr = fopen(filePath, "r+");
