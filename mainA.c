@@ -49,7 +49,7 @@ void stage4();
 void stage5();
 void final_stage();
 
-void updateStage(const char *username, const char *newStage, const char *filePath);
+//void updateStage(const char *username, const char *newStage, const char *filePath);
 int compareStagesDesc(const void *a, const void *b);
 void updateAndSort(const char *username, const char *newStage, const char *filePath);
 
@@ -561,7 +561,7 @@ void stage3(){ //DIVISION
         fprintf(fw,"%s", ACCOUNT_STAGE);
         fclose(fw);
     }
-    // updateStage(ign,ACCOUNT_STAGE,"LEADERB.txt");
+    //updateStage(ign,ACCOUNT_STAGE,"LEADERB.txt");
     updateAndSort(ign,ACCOUNT_STAGE,"LEADERB.txt");
 stage4();
 }
