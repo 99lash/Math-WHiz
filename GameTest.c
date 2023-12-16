@@ -117,7 +117,7 @@ void main(){
     }
     printf("\n\nYOU HAVE %i WRONG ANSWERS", counter);
     decision_prompt();//PROMPTS AN OPTION WHETHER IF THE USER HAD WRONG OR NO WRONG ANSWERS.
-    if(main_option = 00); break;
+    if(main_option == 00) break;
     }while(main_option != 27 && main_option != 'B');
 stage2();
 }
