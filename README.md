@@ -1,6 +1,6 @@
 # Case-study-in-C
 <head>MATH WHIZ</head>
-<h4>Developed and Programmed by <b>bCOLMO and MANIT</b>.</h4>
+<h4>Developed and Programmed by <Strong>bCOLMO and MANIT</Strong>.</h4>
 
 <body>
 <div>
@@ -16,28 +16,28 @@
     
 </div>
     
-<h3>LEVEL?</h3>
+<h3>LEVEL</h3>
 <p>-The need to answer the given mathematical question correctly in order to proceed to the next level.
     </p> 
 
-<h3>STAGE?</h3>
+<h3>STAGE</h3>
     </p> The User needs to finish all levels in a stage in order to proceed to the next stage.
     </p> 
 
 <h3>LOG IN</h3>
-    <p> The user needs to log in to the account to play Math Whiz. To do that, just simply select <b></b>“[2] LOG IN”</b> on the screen of the LANDING page.
+    <p> The user needs to log in to the account to play Math Whiz. To do that, just simply select <b>“[2] LOG IN”</b> on the screen of the LANDING page.
     </p> 
 
 <h3>SIGN UP</h3>
-    <p>If the user doesn’t have an account, you can create one by simply selecting “[1] SIGN UP” on screen of LANDING page.
+    <p>If the user doesn’t have an account, you can create one by simply selecting “[1] SIGN UP” on the screen of the LANDING page.
     </p> 
 
 <h3>MENU</h3>
-    <p> Once log in successfully, user will be re-direct to “MENU PAGE”, where user can choose whether to START playing MATH WHIZ or VIEW LEADERBOARDS.
+    <p> Once logged in successfully, the user will be re-direct to the “MENU PAGE”, where the user can choose whether to START playing MATH WHIZ or VIEW LEADERBOARDS.
     </p> 
 <h3>LEADERBOARDS</h3> 
-    <p>User can view leaderboards by simply selecting
-    “[2] LEADERBOARDS” on MENU page.
+    <p> Users can view leaderboards by simply selecting
+    “[2] LEADERBOARDS” on the MENU page.
     </p> 
 <h3>START</h3> 
     <p>User can start playing by simply selecting “[1] START” on
