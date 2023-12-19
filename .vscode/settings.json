@@ -57,9 +57,6 @@
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
-    "MAINAC.C": "cpp",
-    "SNAKE.C": "cpp",
-    "MAIN6.C": "cpp",
     "MATHWHIZ.C": "cpp"
   }
 }
