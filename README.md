@@ -1,6 +1,6 @@
 # Case-study-in-C
 <head>MATH WHIZ</head>
-<h4>Developed and Programmed by <Strong>bCOLMO and MANIT</Strong>.</h4>
+<h4>Developed and Programmed by <Strong>COLMO and MANIT</Strong>.</h4>
 
 <body>
 <div>
