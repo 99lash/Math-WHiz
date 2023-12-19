@@ -1,5 +1,5 @@
 /*
- TITLE: MATH WHIZ
+  PROJECT TITLE: MATH WHIZ
 
  -COLMO, JOSHUA PAUL M.
  -MANIT, JOHN ASHER M.
@@ -23,7 +23,7 @@
 int counter=0, level=1;
 
 char MW_OPTION, check_filename[20], lb_username[20];
-const char stg_1 = '1', stg_2='2', stg_3='3', stg_4='4', stg_5='5', stg_godMode='6';
+const char stg[6] = {'1','2','3','4','5','6'};
 
 char USERNAME[50],PASSWORD[20];
 char ACCOUNT_STAGE[1];
@@ -203,7 +203,7 @@ void signup(){
 	if(fr == NULL){
 	    if(!strcmp(password_checker, confirm_password)){
 		fclose(fr);
-		ACCOUNT_STAGE[0] = stg_1;
+		ACCOUNT_STAGE[0] = stg[0];
 		strcpy(USERNAME,username_checker);
 		strcpy(PASSWORD,password_checker);
 		fw = fopen(file_name,"w");
@@ -377,7 +377,7 @@ void about(){
 }
 //LEADERBOARDS// di maka handle ng long usernames na pwede maglead sa unresponsiveness
 void leaderboards(){
-    int i, lineLB=0;
+    int n=7,i,lineLB=0;
     char option, tmp = ' ';
     FILE *fr;
     do{
@@ -387,14 +387,18 @@ void leaderboards(){
 	gotoxy(2,7); for(i = 0; i<75; i++) printf("=");
 	fr = fopen("LEADERB.txt", "r");
 	while(fscanf(fr,"%s  %c\n",USERNAME,ACCOUNT_STAGE)!=EOF){
+	    n++;
 	    lineLB++;
-	    printf("\n  %2i.",lineLB);
-	    textcolor(LIGHTGREEN);cprintf("  %10s",USERNAME);
-	    textcolor(YELLOW);cprintf("%52c",ACCOUNT_STAGE[0]);
-	    printf("\n ---------------------------------------------------------------------------");
+	    gotoxy(4,n);printf("%i.",lineLB);
+	    gotoxy(12,n);textcolor(LIGHTGREEN);
+	    cprintf("%s",USERNAME);
+	    gotoxy(67,n);textcolor(YELLOW);
+	    cprintf("%c",ACCOUNT_STAGE[0]);
+	    //printf("---------------------------------------------------------------------------");
 	    textcolor(WHITE);
 	}
 	lineLB=0;
+	n=7;
 	fclose(fr);
 	gotoxy(28,23); textcolor(WHITE); cprintf("\xae \x9 Press ESC to go back \x9 \xaf");
 	option = getch();
@@ -416,29 +420,29 @@ void math_whiz(){
     }
     else{
 	//while(fread(&loc_acc, sizeof(struct user),1,fr)){
-	while(fscanf(fr,"%s %i\n",&USERNAME,ACCOUNT_STAGE)==1){
-	    if(ACCOUNT_STAGE[0] == stg_1){
+	while(fscanf(fr,"%s %i\n",USERNAME,ACCOUNT_STAGE)==1){
+	    if(ACCOUNT_STAGE[0] == stg[0]){
 		fclose(fr); clrscr(); stage1(); break;
 	    }
-	    else if(ACCOUNT_STAGE[0] == stg_2){
+	    else if(ACCOUNT_STAGE[0] == stg[1]){
 		fclose(fr); clrscr(); stage2(); break;
 	    }
-	    else if(ACCOUNT_STAGE[0] == stg_3){
+	    else if(ACCOUNT_STAGE[0] == stg[2]){
 		fclose(fr); clrscr(); stage3(); break;
 	    }
-	    else if(ACCOUNT_STAGE[0] == stg_4){
+	    else if(ACCOUNT_STAGE[0] == stg[3]){
 		fclose(fr); clrscr(); stage4(); break;
 	    }
-	    else if(ACCOUNT_STAGE[0] == stg_5){
+	    else if(ACCOUNT_STAGE[0] == stg[4]){
 		fclose(fr); clrscr(); stage5(); break;
 	    }
-	    else if(ACCOUNT_STAGE[0] == stg_godMode){
+	    else if(ACCOUNT_STAGE[0] == stg[5]){
 		fclose(fr); clrscr(); final_stage(); break;
 	    }
 	    else{
 		fclose(fr);
 		printf("ERROR ON ALLOCATING OF LOADED PROGRESS");
-		getch(); exit(1);
+		getch(); exit(EXIT_FAILURE);
 	    }
 	}
     }
@@ -490,7 +494,6 @@ void stage1(){ //ADDITION & SUBTRACTION
     int n1, n2, sys_ans, user_ans;
     FILE *fw;
     char ign[20];
-    char *newSTG1;
     // int structIndex=1;
     // long offset = sizeof(ACCOUNT_STAGE) * structIndex;
     strcpy(ign,lb_username);
@@ -532,14 +535,13 @@ void stage1(){ //ADDITION & SUBTRACTION
 	return;
     }
     else{
-	ACCOUNT_STAGE[0] = stg_2;
-	*newSTG1 = ACCOUNT_STAGE[0];
+	ACCOUNT_STAGE[0] = stg[1];
 	fseek(fw, -3, SEEK_END);
 	fprintf(fw,"%c", ACCOUNT_STAGE[0]);
 	fclose(fw);
     }
     //updateStage(ign,ACCOUNT_STAGE,"LEADERB.txt");
-    updateAndSort(ign,newSTG1,"LEADERB.txt");
+    updateAndSort(ign,"2","LEADERB.txt");
 stage2();
 }
 
@@ -547,8 +549,6 @@ void stage2(){ //MULTIPLICATION
     int n1, n2, sys_ans, user_ans;
     FILE *fw;
     char ign[20];
-    char *newSTG2;
-
     strcpy(ign,lb_username);
     srand(time(NULL));
     //printf("%s", check_filename);
@@ -570,19 +570,18 @@ void stage2(){ //MULTIPLICATION
 	//PROCEED SA NEXT STAGE PAG NAGBREAK, ELSE ULIT STAGE
     }
     fw = fopen(check_filename, "r+");
-    if (fw == NULL) {
+	    if (fw == NULL) {
 	printf("Error updating file.\n");
 	return;
     }
     else{
-	ACCOUNT_STAGE[0] = stg_3;
-	*newSTG2 = ACCOUNT_STAGE[0];
+	ACCOUNT_STAGE[0] = stg[2];
 	fseek(fw, -3, SEEK_END);
 	fprintf(fw,"%c", ACCOUNT_STAGE[0]);
 	fclose(fw);
     }
     //updateStage(ign,ACCOUNT_STAGE,"LEADERB.txt");
-    updateAndSort(ign,newSTG2,"LEADERB.txt");
+    updateAndSort(ign,"3","LEADERB.txt");
 stage3();
 }
 
@@ -590,8 +589,6 @@ void stage3(){ //DIVISION
     float n1, n2, sys_ans1, sys_ans2, user_ans;
     FILE *fw;
     char ign[20];
-    char *newSTG3;
-
     strcpy(ign,lb_username);
     srand(time(NULL));
     //printf("%s", check_filename);
@@ -625,14 +622,13 @@ void stage3(){ //DIVISION
 	return;
     }
     else{
-	ACCOUNT_STAGE[0] = stg_4;
-	*newSTG3 = ACCOUNT_STAGE[0];
+	ACCOUNT_STAGE[0] = stg[3];
 	fseek(fw, -3, SEEK_END);
 	fprintf(fw,"%c", ACCOUNT_STAGE[0]);
 	fclose(fw);
     }
     // updateStage(ign,ACCOUNT_STAGE,"LEADERB.txt");
-    updateAndSort(ign,newSTG3,"LEADERB.txt");
+    updateAndSort(ign,"4","LEADERB.txt");
 stage4();
 }
 
@@ -640,7 +636,6 @@ void stage4(){ //MIXED OF ADDITION AND SUBTRACTION
     int n1, n2, n3, sys_ans, user_ans;
     FILE *fw;
     char ign[20];
-    char *newSTG4;
 
     strcpy(ign,lb_username);
     srand(time(NULL));
@@ -671,14 +666,13 @@ void stage4(){ //MIXED OF ADDITION AND SUBTRACTION
 	return;
     }
     else{
-	ACCOUNT_STAGE[0] = stg_5;
-	*newSTG4 = ACCOUNT_STAGE[0];
+	ACCOUNT_STAGE[0] = stg[4];
 	fseek(fw, -3, SEEK_END);
 	fprintf(fw,"%c", ACCOUNT_STAGE[0]);
 	fclose(fw);
     }
     // updateStage(ign,ACCOUNT_STAGE,"LEADERB.txt");
-    updateAndSort(ign,newSTG4,"LEADERB.txt");
+    updateAndSort(ign,"5","LEADERB.txt");
 stage5();
 }
 
@@ -686,7 +680,6 @@ void stage5(){ //MIXED OF MULTIPLICATION AND DIVISION
     float n1, n2, n3, sys_ans1, sys_ans2, user_ans;
     FILE *fw;
     char ign[20];
-    char *newSTG5;
 
     strcpy(ign,lb_username);
     srand(time(NULL));
@@ -706,7 +699,7 @@ void stage5(){ //MIXED OF MULTIPLICATION AND DIVISION
 	    sys_ans2 = round_off(sys_ans2,2);
 	    //printf("bot ans 1 dplaces: %f\n", sys_ans1);
 	    //printf("bot ans 2 dplaces: %f\n", sys_ans2);
-	    printf("%.f x  %.f / %.f = ", n1, n2, n3);
+	    printf("%f x  %f / %f = ", n1, n2, n3);
 	    scanf("%f", &user_ans);
 	    fIdentifier(user_ans, sys_ans1, sys_ans2);
 	    level++;
@@ -722,14 +715,13 @@ void stage5(){ //MIXED OF MULTIPLICATION AND DIVISION
 	return;
     }
     else{
-	ACCOUNT_STAGE[0] = stg_godMode;
-	*newSTG5 = ACCOUNT_STAGE[0];
+	ACCOUNT_STAGE[0] = stg[5];
 	fseek(fw, -3, SEEK_END);
 	fprintf(fw,"%c", ACCOUNT_STAGE[0]);
 	fclose(fw);
     }
     // updateStage(ign,ACCOUNT_STAGE,"LEADERB.txt");
-    updateAndSort(ign,newSTG5,"LEADERB.txt");
+    updateAndSort(ign,"6","LEADERB.txt");
 final_stage();
 }
 
@@ -740,7 +732,7 @@ void final_stage(){ //MIXED OF ALL OPERATORS
     //printf("%s", check_filename);
     gotoxy(4,2);printf("\x11 STAGE %c \x10",ACCOUNT_STAGE[0]);
     while(MW_OPTION != ESC && MW_OPTION != 'B'){
-	gotoxy(33,2);printf("\x11 FINAL STAGE \x10");
+	gotoxy(2,2);printf("\x11 FINAL STAGE \x10");
 	gotoxy(18,2);textcolor(YELLOW);
 	cprintf("You may answer in less than point 2 decimal places");
 	do{
@@ -749,13 +741,11 @@ void final_stage(){ //MIXED OF ALL OPERATORS
 	    n3 = (rand() % 10) + 1;
 	    n4 = (rand() % 10) + 1;
 	    n5 = (rand() % 10) + 1;
-	    gotoxy(37,4);textcolor(7);
-	    cprintf("You may answer in less than point 2 decimal places");
 	    printf("\n\nLEVEL %i\n",level);
 	    sys_ans1 = all_op(n1, n2, n3, n4, n5);
 	    sys_ans2 = all_op(n1, n2, n3, n4, n5);
 	    sys_ans1 = round_off(sys_ans1,1);
-	    sys_ans2 = round_off(sys_ans2,1);
+	    sys_ans2 = round_off(sys_ans2,2);
 	    //printf("bot ans 1 dplaces: %f\n", sys_ans1);
 	    //printf("bot ans 2 dplaces: %f\n", sys_ans2);
 	    printf("%.f +  %.f - %.f x %.f / %.f = ", n1, n2, n3, n4, n5);
@@ -769,7 +759,8 @@ void final_stage(){ //MIXED OF ALL OPERATORS
 	//PROCEED SA NEXT STAGE PAG NAGBREAK, ELSE ULIT STAGE
     }
     printf("\n\nCONGRATULATIONS!\n MATH WHIZ TEAM ARE GLAD FOR YOU TO MADE IT HERE.\n");
-    printf("You are now a certified \"MATH WHIZ'er\"");
+    printf("\n\n\n\tYou are now a certified \"MATH WHIZ'er\"");
+    getch();
 }
 
 int compareStages(const void *a, const void *b) {
