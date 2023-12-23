@@ -1,6 +1,6 @@
-# Case-study-in-C
-<head>MATH WHIZ</head>
-<h4>Developed and Programmed by <Strong>COLMO and MANIT</Strong>.</h4>
+# MATH WHIZ
+<head>A case study project in C</head>
+<h4>Author <Strong>COLMO and MANIT</Strong>.</h4>
 
 <body>
 <div>
