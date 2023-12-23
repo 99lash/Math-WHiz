@@ -1,6 +1,6 @@
 # MATH WHIZ
 <head>A case study project in C</head>
-<h4>Author: **COLMO** and **MANIT**.</h4>
+<h4>Author: COLMO & MANIT.</h4>
 
 <body>
 <div>
