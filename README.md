@@ -1,8 +1,7 @@
-# CASE STUDY PROJECT
+## CASE STUDY PROJECT
 
 ### ABOUT
 MATH WHiz is a console application that challenges users to solve random mathematical questions and different operations (dynamic questions) according to the designated difficulty of the current stage and the level of the user.
-
 - It has 6 stages and 5 levels in every stage.
 - Each stage has its difficulty which depends on mathematical operators, and increasing limits of given numbers every level up.
 - Finish the game to gain the “MATH WHIZ” title on the Leaderboards
