@@ -24,7 +24,7 @@ Players may sign up if he/she doesn’t have an account by simply selecting `[2]
 
 ---
 >[!NOTE]\
->**WE ARE OPEN FOR CRITIQUES & SUGGESTIONS**💡<br><br>If you have some related ideas to add or to enhance and also want to help a beginner like to excel. Feel free to create a new issue in this project, it's a big help for someone like me to introduce such advanced and challenging things to enhance my whole skills as a programmer.
+>**WE ARE OPEN FOR CRITIQUES & SUGGESTIONS**💡<br><br>If you have some related ideas to add or to enhance and also want to help a beginner like me to excel. Feel free to create a new issue in this project, it's a big help for someone like me to introduce such advanced and challenging things to enhance my whole skills as a programmer.
 <!---<h4 align="center">OPEN FOR CRITIQUEs & SUGGESTIONs</h4>
 <p>If you have some interesting ideas to add or to improve and also want to help a beginner like me. Feel free to create a new issue, it's a big help for someone like me to introduce such advanced and challenging things to enhance my whole skills as a programmer.</p>
 --->
