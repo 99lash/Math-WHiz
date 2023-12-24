@@ -1,22 +1,14 @@
-# MATH WHIZ
-<head>A case study project in C</head>
-<h4>Author: COLMO & MANIT.</h4>
+# CASE STUDY PROJECT
 
-<body>
-<div>
-        <h3>ABOUT</h3>
-<p>MATH WHIZ is a console application that challenges users to solve random mathematical questions and different operations (dynamic questions) according to the designated difficulty of the current stage and the level of the user.
-    </p>
+### ABOUT
+MATH WHiz is a console application that challenges users to solve random mathematical questions and different operations (dynamic questions) according to the designated difficulty of the current stage and the level of the user.
 
-    -It has 6 stages and 5 levels in every stage. 
-
-    -Each stage has its own difficulty which depends on mathematical operators, and increasing limits of given numbers every level up.
-
-    -Finish the game to gain the “MATH WHIZ” title on the Leaderboards
+- It has 6 stages and 5 levels in every stage.
+- Each stage has its difficulty which depends on mathematical operators, and increasing limits of given numbers every level up.
+- Finish the game to gain the “MATH WHIZ” title on the Leaderboards
     
-</div>
     
-<h3>LEVEL</h3>
+### LEVEL
 <p>-The need to answer the given mathematical question correctly in order to proceed to the next level.
     </p> 
 
