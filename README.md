@@ -1,38 +1,25 @@
-## CASE STUDY PROJECT
+## MATH WHIZ: A CASE STUDY PROJECT
 
 ### ABOUT
 MATH WHiz is a console application that challenges users to solve random mathematical questions and different operations (dynamic questions) according to the designated difficulty of the current stage and the level of the user.
-- It has 6 stages and 5 levels in every stage.
-- Each stage has its difficulty which depends on mathematical operators, and increasing limits of given numbers every level up.
-- Finish the game to gain the “MATH WHIZ” title on the Leaderboards
-    
-    
+
+- It has 5 levels in every stage.
+- Every stage has an increasing difficulty at every staging up.
+- It has a leaderboard feature which makes the players more competitive than others. 
+- Finish the game to gain the `MATH WHIZ'er` title on the Leaderboards.
+
+---    
 ### LEVEL
-<p>-The need to answer the given mathematical question correctly in order to proceed to the next level.
-    </p> 
+Players need to answer the given mathematical question correctly to proceed to the next level.
 
-<h3>STAGE</h3>
-    </p> The User needs to finish all levels in a stage in order to proceed to the next stage.
-    </p> 
+### STAGE
+Players need also to finish all levels in a stage to proceed to the next stage.
 
-<h3>LOG IN</h3>
-    <p> The user needs to log in to the account to play Math Whiz. To do that, just simply select <b>“[2] LOG IN”</b> on the screen of the LANDING page.
-    </p> 
+### LOG IN
+Players need to log in to their account to play **MATH WHiz**. 
+To do that, just simply select `[1] LOG IN` on the screen of a page.
 
-<h3>SIGN UP</h3>
-    <p>If the user doesn’t have an account, you can create one by simply selecting “[1] SIGN UP” on the screen of the LANDING page.
-    </p> 
+### SIGN UP
+Players may sign up if he/she doesn’t have an account by simply selecting `[2] SIGN UP` on the screen of a page. 
 
-<h3>MENU</h3>
-    <p> Once logged in successfully, the user will be re-direct to the “MENU PAGE”, where the user can choose whether to START playing MATH WHIZ or VIEW LEADERBOARDS.
-    </p> 
-<h3>LEADERBOARDS</h3> 
-    <p> Users can view leaderboards by simply selecting
-    “[2] LEADERBOARDS” on the MENU page.
-    </p> 
-<h3>START</h3> 
-    <p>User can start playing by simply selecting “[1] START” on
-    MENU page.
-    </p>
-</body>
-
+---
